@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/11/07/MongoDB 学习笔记（一）/index.html">
 <meta property="og:site_name" content="叶言">
 <meta property="og:description" content="MongoDB 学习笔记（一）mongodb是一种非结构化存储数据库，它的数据是以文档为基础的在本地以二进制形式进行存储（Bosn），虽然有与sql查询语句相似的方式，但与SQL语法没有任何关系，更像是一种面相对象的编程，调用函数接口。">
-<meta property="og:updated_time" content="2017-11-06T21:26:51.000Z">
+<meta property="og:updated_time" content="2017-11-06T21:34:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="叶言">
 <meta name="twitter:description" content="MongoDB 学习笔记（一）mongodb是一种非结构化存储数据库，它的数据是以文档为基础的在本地以二进制形式进行存储（Bosn），虽然有与sql查询语句相似的方式，但与SQL语法没有任何关系，更像是一种面相对象的编程，调用函数接口。">
@@ -245,7 +245,7 @@
       
           
         <h1 id="MongoDB-学习笔记（一）"><a href="#MongoDB-学习笔记（一）" class="headerlink" title="MongoDB 学习笔记（一）"></a>MongoDB 学习笔记（一）</h1><p>mongodb是一种非结构化存储数据库，它的数据是以文档为基础的在本地以二进制形式进行存储（Bosn），虽然有与sql查询语句相似的方式，但与SQL语法没有任何关系，更像是一种面相对象的编程，调用函数接口。<br> <a id="more"></a><br><strong>启动方式：</strong> </p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># <span class="selector-tag">apple</span> @ admin [<span class="number">12</span>:<span class="number">05</span>:<span class="number">48</span>] $ mongodb //启动一个mongodb服务器（默认端口在<span class="number">27017</span>）,默认启动连接数据库为 ／data/db 若想指定数据库，需添加参数--dbpath </div><div class="line">例：  </div><div class="line"># apple @ admin [<span class="number">12</span>:<span class="number">05</span>:<span class="number">48</span>] $ mongod --dbpath ~/workspace/stock/mongodb/data/db  # apple @ admin [<span class="number">12</span>:<span class="number">05</span>:<span class="number">48</span>] $ mongo //启动一个命令行交互程序，是mongodbd的一个进程</div></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># <span class="selector-tag">apple</span> @ admin [<span class="number">12</span>:<span class="number">05</span>:<span class="number">48</span>] $ mongodb //启动一个mongodb服务器（默认端口在<span class="number">27017</span>）,默认启动连接数据库为 ／data/db 若想指定数据库，需添加参数--dbpath </div><div class="line">例：  </div><div class="line"># apple @ admin [<span class="number">12</span>:<span class="number">05</span>:<span class="number">48</span>] $ mongod --dbpath ~/workspace/stock/mongodb/data/db  </div><div class="line"># apple @ admin [<span class="number">12</span>:<span class="number">05</span>:<span class="number">48</span>] $ mongo //启动一个命令行交互程序，是mongodbd的一个进程</div></pre></td></tr></table></figure>
 <p>我在使用mongodb是主要用python编程进行数据录入和处理，因此使用mongodb提供的<strong>pymongo</strong>包在程序中连接数据库进行操作<br> <strong>连接数据库：</strong> </p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">from</span> <span class="selector-tag">pymongo</span> <span class="selector-tag">import</span> <span class="selector-tag">MongoClient</span> </div><div class="line">client=MongoClient() //创建一个服务器进程，默认自动创建端口  </div><div class="line">db = client['STOCK'] //连接到数据库STOCK</div></pre></td></tr></table></figure>
 <h2 id="常用数据库操作"><a href="#常用数据库操作" class="headerlink" title="常用数据库操作"></a>常用数据库操作</h2><p><strong>增：</strong><br>函数名：insert_one() 作用：用于插入一个文档  使用格式：db.get_collection(‘CollectionName’).insert_one({‘key’:’value’}) 函数名：insert_many() 作用：用于插入多个文档  使用格式：db.get_collection(‘CollectionName’).insert_many([  {‘key’: i }  ]for i in range(n)) </p>
@@ -254,15 +254,6 @@
 <figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ATicker=db.get_collection('SEquA').find( &#123;&#125;</div><div class="line"></div><div class="line">, &#123;</div><div class="line">    'ticker': 1, '_id':0</div><div class="line">&#125;</div><div class="line"></div><div class="line">)</div></pre></td></tr></table></figure>
 <p><strong>注意：find()函数查找所返回的格式是dict,关于dict对象的操作方式自行查找</strong><br><strong>改：</strong><br>函数名：update() 作用：对指定文档进行更新和添加  使用格式：db.get_collection(‘CollectionName’).update({filter},{operation},  otherparameter…) </p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">db</span><span class="selector-class">.get_collection</span>("<span class="selector-tag">SConC</span>")<span class="selector-class">.update</span>( &#123;</div><div class="line">    "c_name": SConC['c_name'][i]</div><div class="line">&#125;</div><div class="line"></div><div class="line">, &#123;</div><div class="line">    "$set": &#123;</div><div class="line">        <span class="selector-tag">SConC</span><span class="selector-attr">['code']</span><span class="selector-attr">[i]</span>: &#123;</div><div class="line">            "name": SConC['name'][i]</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">, upsert=True)</div></pre></td></tr></table></figure>
-<span>$$\begin{aligned}
-
-\dot{x} &amp; = \sigma(y-x) \\
-
-\dot{y} &amp; = \rho x - y - xz \\
-
-\dot{z} &amp; = -\beta z + xy
-
-\end{aligned}$$</span><!-- Has MathJax -->
 
       
       
@@ -282,13 +273,13 @@
               
                 <div class="pay_item checked" data-id="alipay">
                   <span class="radiobox"></span>
-                  <span class="pay_logo"><img src="/img/alipay.png" alt="支付宝" /></span>
+                  <span class="pay_logo"><img src="/img/alipay.jpg" alt="支付宝" /></span>
                 </div>
               
               
                 <div class="pay_item" data-id="wechat">
                   <span class="radiobox"></span>
-                  <span class="pay_logo"><img src="/img/wechatpay.png" alt="微信" /></span>
+                  <span class="pay_logo"><img src="/img/wechatpay.jpg" alt="微信" /></span>
                 </div>
               
             </div>
@@ -321,7 +312,7 @@
         <p><span>本文标题:</span><a href="/2017/11/07/MongoDB 学习笔记（一）/"></a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Liu Zongxuan 的个人博客">Liu Zongxuan</a></p>
         <p><span>发布时间:</span>2017年11月07日 - 02时44分</p>
-        <p><span>最后更新:</span>2017年11月07日 - 05时26分</p>
+        <p><span>最后更新:</span>2017年11月07日 - 05时34分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/11/07/MongoDB 学习笔记（一）/" title="">http://yoursite.com/2017/11/07/MongoDB 学习笔记（一）/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2017/11/07/MongoDB 学习笔记（一）/　　作者: Liu Zongxuan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -429,7 +420,7 @@
             <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
     </div>
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/11/07/决策树/">决策树</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/07/MongoDB 学习笔记（一）/">MongoDB 学习笔记（一）</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/11/07/Mongodb学习笔记（二）/">Mongodb学习笔记（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/07/决策树/">决策树</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/07/MongoDB 学习笔记（一）/">MongoDB 学习笔记（一）</a></li></ul>
     <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
     <script>
         $(".post-list").addClass("toc-article");
