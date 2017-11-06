@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title: MongoDB 学习笔记（一）  categories: - 并行计算 tags:  - 学习 - mongodb —  @(并行计算)[mongodb]  MongoDB 学习笔记（一）mongodb是一种非结构化存储数据库，它的数据是以文档为基础的在本地以二进制形式进行存储（Bosn），虽然有与sql查询语句相似的方式，但与SQL语法没有任何关系，更像是一种面相对象的编程，调用函">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/2017/11/07/2017-11-07-untitled/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="title: MongoDB 学习笔记（一）  categories: - 并行计算 tags:  - 学习 - mongodb —  @(并行计算)[mongodb]  MongoDB 学习笔记（一）mongodb是一种非结构化存储数据库，它的数据是以文档为基础的在本地以二进制形式进行存储（Bosn），虽然有与sql查询语句相似的方式，但与SQL语法没有任何关系，更像是一种面相对象的编程，调用函">
+<meta property="og:updated_time" content="2017-11-06T18:52:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+<meta name="twitter:description" content="title: MongoDB 学习笔记（一）  categories: - 并行计算 tags:  - 学习 - mongodb —  @(并行计算)[mongodb]  MongoDB 学习笔记（一）mongodb是一种非结构化存储数据库，它的数据是以文档为基础的在本地以二进制形式进行存储（Bosn），虽然有与sql查询语句相似的方式，但与SQL语法没有任何关系，更像是一种面相对象的编程，调用函">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2017-11-07-untitled" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/11/07/2017-11-07-untitled/" class="article-date">
+  <time datetime="2017-11-06T18:44:46.000Z" itemprop="datePublished">2017-11-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: MongoDB 学习笔记（一）  categories: - 并行计算 tags:  - 学习 - mongodb —  @(并行计算)[mongodb] </p>
+<h1 id="MongoDB-学习笔记（一）"><a href="#MongoDB-学习笔记（一）" class="headerlink" title="MongoDB 学习笔记（一）"></a>MongoDB 学习笔记（一）</h1><p>mongodb是一种非结构化存储数据库，它的数据是以文档为基础的在本地以二进制形式进行存储（Bosn），虽然有与sql查询语句相似的方式，但与SQL语法没有任何关系，更像是一种面相对象的编程，调用函数接口。<br> <a id="more"></a><br><strong>启动方式：</strong><br><figure class="highlight plain"><figcaption><span>apple @ admin [12:05:48] $ mongodb</span><a href="//启动一个mongodb服务器（默认端口在27017）,默认启动连接数据库为">／data/db 若想指定数据库，需添加参数--dbpath 例：  # apple @ admin [12:05:48] $ mongod --dbpath ~/workspace/stock/mongodb/data/db  # apple @ admin [12:05:48] $ mongo //启动一个命令行交互程序，是mongodbd的一个进程  ```  </a></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">我在使用mongodb是主要用python编程进行数据录入和处理，因此使用mongodb提供的**pymongo**包在程序中连接数据库进行操作 </div><div class="line"> **连接数据库：** </div><div class="line">```  from pymongo import MongoClient  client = MongoClient() //创建一个服务器进程，默认自动创建端口  db = client[&apos;STOCK&apos;] //连接到数据库STOCK  ``` </div><div class="line"></div><div class="line">## 常用数据库操作  </div><div class="line"></div><div class="line">**增：** </div><div class="line">函数名：insert_one() 作用：用于插入一个文档  使用格式：db.get_collection(&apos;CollectionName&apos;).insert_one(&#123;&apos;key&apos;:&apos;value&apos;&#125;) 函数名：insert_many() 作用：用于插入多个文档  使用格式：db.get_collection(&apos;CollectionName&apos;).insert_many([  &#123;&apos;key&apos;: i &#125;  ]for i in range(n)) </div><div class="line">```  Acoll = db[&apos;SEquA&apos;]  Aresult = Acoll.insert_many(  [&#123;  &quot;ticker&quot;: SA[&apos;ticker&apos;][i],  &quot;secShortName&quot;: SA[&apos;secShortName&apos;][i]  &#125;for i in range(len(SA))]  )  ``` </div><div class="line"> **查：**  </div><div class="line">函数名：find() 作用：查找所需要的文档  使用格式：db.get_collection(&apos;CollectionName&apos;).find(&#123;&apos;key&apos;:&apos;value&apos;&#125;)  其他使用方式查看：http://api.mongodb.com/python/current/api/pymongo/collection.html?_ga=1.224606170.1159885722.1489465777#pymongo.collection.Collection.find </div><div class="line">```  ATicker = db.get_collection(&apos;SEquA&apos;).find(&#123;&#125;,&#123;&apos;ticker&apos;:1,&apos;_id&apos;:0&#125;)  ```  **注意：find()函数查找所返回的格式是dict,关于dict对象的操作方式自行查找**  </div><div class="line">**改：**  </div><div class="line">函数名：update() 作用：对指定文档进行更新和添加  使用格式：db.get_collection(&apos;CollectionName&apos;).update(&#123;filter&#125;,&#123;operation&#125;,  otherparameter...) </div><div class="line">```  db.get_collection(&quot;SConC&quot;).update(&#123;&quot;c_name&quot;:SConC[&apos;c_name&apos;][i]&#125;,&#123;&quot;$set&quot;:&#123;  SConC[&apos;code&apos;][i]:&#123;  &quot;name&quot;:SConC[&apos;name&apos;][i]  &#125;  &#125;&#125;,upsert=True)</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/11/07/2017-11-07-untitled/" data-id="cj9ojo24300009lt63el2rzq8" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Articles récents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/11/07/2017-11-07-untitled/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
