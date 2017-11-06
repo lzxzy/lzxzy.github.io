@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/11/07/MongoDB 学习笔记（一）/index.html">
 <meta property="og:site_name" content="叶言">
 <meta property="og:description" content="MongoDB 学习笔记（一）mongodb是一种非结构化存储数据库，它的数据是以文档为基础的在本地以二进制形式进行存储（Bosn），虽然有与sql查询语句相似的方式，但与SQL语法没有任何关系，更像是一种面相对象的编程，调用函数接口。">
-<meta property="og:updated_time" content="2017-11-06T20:16:48.000Z">
+<meta property="og:updated_time" content="2017-11-06T21:13:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="叶言">
 <meta name="twitter:description" content="MongoDB 学习笔记（一）mongodb是一种非结构化存储数据库，它的数据是以文档为基础的在本地以二进制形式进行存储（Bosn），虽然有与sql查询语句相似的方式，但与SQL语法没有任何关系，更像是一种面相对象的编程，调用函数接口。">
@@ -245,7 +245,7 @@
       
           
         <h1 id="MongoDB-学习笔记（一）"><a href="#MongoDB-学习笔记（一）" class="headerlink" title="MongoDB 学习笔记（一）"></a>MongoDB 学习笔记（一）</h1><p>mongodb是一种非结构化存储数据库，它的数据是以文档为基础的在本地以二进制形式进行存储（Bosn），虽然有与sql查询语句相似的方式，但与SQL语法没有任何关系，更像是一种面相对象的编程，调用函数接口。<br> <a id="more"></a><br><strong>启动方式：</strong> </p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"># <span class="selector-tag">apple</span> @ admin [<span class="number">12</span>:<span class="number">05</span>:<span class="number">48</span>] $ mongodb //启动一个mongodb服务器（默认端口在<span class="number">27017</span>）,默认启动连接数据库为 ／data/db 若想指定数据库，需添加参数--dbpath 例：  # apple @ admin [<span class="number">12</span>:<span class="number">05</span>:<span class="number">48</span>] $ mongod --dbpath ~/workspace/stock/mongodb/data/db  # apple @ admin [<span class="number">12</span>:<span class="number">05</span>:<span class="number">48</span>] $ mongo //启动一个命令行交互程序，是mongodbd的一个进程</div></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># <span class="selector-tag">apple</span> @ admin [<span class="number">12</span>:<span class="number">05</span>:<span class="number">48</span>] $ mongodb //启动一个mongodb服务器（默认端口在<span class="number">27017</span>）,默认启动连接数据库为 ／data/db 若想指定数据库，需添加参数--dbpath </div><div class="line">例：  </div><div class="line"># apple @ admin [<span class="number">12</span>:<span class="number">05</span>:<span class="number">48</span>] $ mongod --dbpath ~/workspace/stock/mongodb/data/db  # apple @ admin [<span class="number">12</span>:<span class="number">05</span>:<span class="number">48</span>] $ mongo //启动一个命令行交互程序，是mongodbd的一个进程</div></pre></td></tr></table></figure>
 <p>我在使用mongodb是主要用python编程进行数据录入和处理，因此使用mongodb提供的<strong>pymongo</strong>包在程序中连接数据库进行操作<br> <strong>连接数据库：</strong> </p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">from</span> <span class="selector-tag">pymongo</span> <span class="selector-tag">import</span> <span class="selector-tag">MongoClient</span> </div><div class="line">client=MongoClient() //创建一个服务器进程，默认自动创建端口  </div><div class="line">db = client['STOCK'] //连接到数据库STOCK</div></pre></td></tr></table></figure>
 <h2 id="常用数据库操作"><a href="#常用数据库操作" class="headerlink" title="常用数据库操作"></a>常用数据库操作</h2><p><strong>增：</strong><br>函数名：insert_one() 作用：用于插入一个文档  使用格式：db.get_collection(‘CollectionName’).insert_one({‘key’:’value’}) 函数名：insert_many() 作用：用于插入多个文档  使用格式：db.get_collection(‘CollectionName’).insert_many([  {‘key’: i }  ]for i in range(n)) </p>
@@ -312,7 +312,7 @@
         <p><span>本文标题:</span><a href="/2017/11/07/MongoDB 学习笔记（一）/"></a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Liu Zongxuan 的个人博客">Liu Zongxuan</a></p>
         <p><span>发布时间:</span>2017年11月07日 - 02时44分</p>
-        <p><span>最后更新:</span>2017年11月07日 - 04时16分</p>
+        <p><span>最后更新:</span>2017年11月07日 - 05时13分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/11/07/MongoDB 学习笔记（一）/" title="">http://yoursite.com/2017/11/07/MongoDB 学习笔记（一）/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2017/11/07/MongoDB 学习笔记（一）/　　作者: Liu Zongxuan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -461,7 +461,7 @@
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" >海贼到访数: 
+                        <span id="site-visit" >访客到访数: 
                             <span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
@@ -496,6 +496,27 @@
 
 
 
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
 
 
 <div class="scroll" id="scroll">
@@ -541,6 +562,23 @@
 </script>
 
 
-  </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 </body>
 </html>
