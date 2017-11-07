@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://yoursite.com/2017/11/07/Mongodb%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/</loc>
+    <lastmod>2017-11-07T05:27:18.000Z</lastmod>
+    <data>
+        <display>
+        <title>Mongodb学习笔记（二）</title>
+        <pubTime>2017-11-06T21:34:33.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>mongodb</tag>
+         
+         
+           
+             
+              <breadCrumb title="Mongodb" url="http://yoursite.com/categories/Mongodb/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2017/11/07/%E5%86%B3%E7%AD%96%E6%A0%91/</loc>
     <lastmod>2017-11-07T05:21:15.000Z</lastmod>
     <data>
@@ -32,28 +54,6 @@
         <display>
         <title>Mongodb学习笔记（一）</title>
         <pubTime>2017-11-06T18:44:46.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-        <tag>mongodb</tag>
-         
-         
-           
-             
-              <breadCrumb title="Mongodb" url="http://yoursite.com/categories/Mongodb/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yoursite.com/2017/11/07/Mongodb%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/</loc>
-    <lastmod>2017-11-07T05:19:51.000Z</lastmod>
-    <data>
-        <display>
-        <title>Mongodb学习笔记（二）</title>
-        <pubTime>2017-11-06T21:34:33.000Z</pubTime>
         
         <tag>python</tag>
          
