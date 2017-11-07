@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[test_image]]></title>
+    <url>%2F2017%2F11%2F07%2Ftest_image%2F</url>
+    <content type="text"><![CDATA[test_image]]></content>
+      <categories>
+        <category>生活</category>
+      </categories>
+      <tags>
+        <tag>随记，生活</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Mongodb学习笔记（二）]]></title>
     <url>%2F2017%2F11%2F07%2FMongodb%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%2F</url>
     <content type="text"><![CDATA[Mongodb学习笔记（二） 关于Unicode字符串的一点说明你可能已经注意到，之前存入数据库的事常规的Python字符串，这与我们从数据库服务器里取回来的看起来不同（比如 u’Mike’ 而不是‘Mike’）。 下面简单解释一下。 MongoDB 以格式保存数据. BSON 字符串都是 UTF-8编码的， 所以PyMongo必须确保它保存的字符串值包含有效地 UTF-8数据.常规字符串 ( )都是有效的，可以不改变直接保存。Unicode 字符串( )就需要先编码成 UTF-8 格式.例子里的字符串显示为u’Mike’ 而不是 ‘Mike’是因为 PyMongo 会把每个BSON 字符串转换成 Python 的unicode 字符串, 而不是常规的 str. 这个问题困扰了我好多天，其实并不用太担心，因为在python处理过程中它会依然正常处理 Mongodb查询返回值如果用find({})函数查询，则返回的是一个游标并不是字典，类似于list若要查看其中内容需用for循环遍历 123p = StockDB.get_collection('SHistA').find(&#123;&#125;,&#123;ticker:1,"_id":0&#125;)for doc in p: ... 用find_one({})返回的则是字典]]></content>
