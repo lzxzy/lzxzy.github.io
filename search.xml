@@ -1,39 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
-  <entry>
-    <title><![CDATA[Mongodb学习笔记（二）]]></title>
-    <url>%2F2017%2F11%2F07%2FMongodb%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%2F</url>
-    <content type="text"><![CDATA[Mongodb学习笔记（二） 关于Unicode字符串的一点说明你可能已经注意到，之前存入数据库的事常规的Python字符串，这与我们从数据库服务器里取回来的看起来不同（比如 u’Mike’ 而不是‘Mike’）。 下面简单解释一下。 MongoDB 以格式保存数据. BSON 字符串都是 UTF-8编码的， 所以PyMongo必须确保它保存的字符串值包含有效地 UTF-8数据.常规字符串 ( )都是有效的，可以不改变直接保存。Unicode 字符串( )就需要先编码成 UTF-8 格式.例子里的字符串显示为u’Mike’ 而不是 ‘Mike’是因为 PyMongo 会把每个BSON 字符串转换成 Python 的unicode 字符串, 而不是常规的 str. 这个问题困扰了我好多天，其实并不用太担心，因为在python处理过程中它会依然正常处理 Mongodb查询返回值如果用find({})函数查询，则返回的是一个游标并不是字典，类似于list若要查看其中内容需用for循环遍历 123p = StockDB.get_collection(&apos;SHistA&apos;).find(&#123;&#125;,&#123;ticker:1,&quot;_id&quot;:0&#125;)for doc in p: ... 用find_one({})返回的则是字典]]></content>
-      <categories>
-        <category>Mongodb</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>mongodb</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[决策树]]></title>
-    <url>%2F2017%2F11%2F07%2F%E5%86%B3%E7%AD%96%E6%A0%91%2F</url>
-    <content type="text"><![CDATA[决策树决策树以数据特征做划分，利用特征鲜明且完备的方式将数据划入不同的分类。是一种数值离散的聚类算法。 其中最主要的两个知识点是信息熵和信息增益。决策树根据所给数据特征的信息增益决定划分方式。 特征选择选取对训练数据具有分类功能的特征 信息熵 在信息论和概率统计中对随记变量不确定性的度量 设X是一个取有限个值的离散随机变量，其概率分布： $$P(X = x_i)=p_i, i = 1,2,···n$$ 则X的熵定义为：$H(X) =- \sum_{i=1}^{n}p_ilog(p_i)$log以2为底单位为比特（bit） 上式表明熵越大X的不确定度越大 若有二维随机变量(X,Y），其联合概率为：$$P(X = x_i,Y = yj) = p{ij} ， i = 1,2,3······n,j= 1,2,3······m$$ 条件熵H(Y|X)表示在已知随机变量X的条件下随机变量Y的不确定度。$$H(Y|X) = \sum_{i = 1}^{n}p_iH(Y|X=x_i)$$ $$p_i = P(X = x_i),i = 1,2,3······n$$ 在得到一批数据后可以通过数据估计，所得熵与条件熵称经验熵和经验条件熵信息增益表示在得知特征X的条件下，而使得Y的信息不确定性减少的程度。 特征 X对训练数据集Y的信息增益g(Y,X)，定义为集合Y的经验熵H(Y)与特征 X给定条件下Y的经验条件熵H(Y|X)之差$$g(Y,X) = H(Y) - H(Y|X)$$ 因此对给定数据集和特征，信息增益越大的特征具有更强的分类能力 所以特征选择的方法：对数据集，计算其每个特征的信息增益，并比较它们的大小，选择信息增益最大的特征，并迭代进行 计算信息熵（香农熵）12345678910111213141516# 计算信息熵 def CalcShannonEnt(dataSet) : # 计算数据集的输入个数 numEntries=len(dataSet) # []列表,&#123;&#125;元字典,()元组 labelCounts= &#123;&#125; # 创建存储标签的元字典 # 对数据集dataSet中的每一行featVec进行循环遍历 for featVec in dataSet : currentLabels=featVec[-1] # currentLabels为featVec的最后一个元素 if currentLabels not in labelCounts.keys() : # 如果标签currentLabels不在元字典对应的key中 labelCounts[currentLabels]=0 # 将标签currentLabels放到字典中作为key，并将值赋为0 labelCounts[currentLabels]+=1 # 将currentLabels对应的值加1 shannonEnt=0.0 # 定义香农熵shannonEnt for key in labelCounts : # 遍历元字典labelCounts中的key，即标签 prob=float(labelCounts[key]) / numEntries # 计算每一个标签出现的频率，即概率 shannonEnt -=prob * log(prob, 2)# 根据信息熵公式计算每个标签信息熵并累加到shannonEnt上return shannonEnt# 返回求得的整个标签对应的信息熵 计算条件熵选择最好的分类特征123456789101112131415161718def chooseBestFeatureToSplit(dataSet): # 选择使分割后信息增益最大的特征，即对应的列 numFeatures=len(dataSet[0]) - 1 # 获取特征的数目，从0开始，dataSet[0]是一条数据 baseEntropy=CalcShannonEnt(dataSet) # 计算数据集当前的信息熵 bestInfoGain=0.0 # 定义最大的信息增益 bestFeature=-1 # 定义分割后信息增益最大的特征 for i in range(numFeatures):# 遍历特征，即所有的列，计算每一列分割后的信息增益，找出信息增益最大的列 featList=[example[i] for example in dataSet] # 取出第i列特征赋给featList uniqueVals=set(featList) # 将特征对应的值放到一个集合中，使得特征列的数据具有唯一性 newEntropy=0.0 # 定义分割后的信息熵 for value in uniqueVals: # 遍历特征列的所有值(值是唯一的，重复值已经合并)，分割并计算信息增益 subDataSet=splitDataSet(dataSet,i, value) # 按照特征列的每个值进行数据集分割 prob=len(subDataSet) / float(len(dataSet)) # 计算分割后的每个子集的概率(频率) newEntropy+=prob * CalcShannonEnt(subDataSet) # 计算分割后的子集的信息熵并相加，得到分割后的整个数据集的信息熵 infoGain=baseEntropy - newEntropy # 计算分割后的信息增益 if (infoGain &gt; bestInfoGain): #如果分割后信息增益大于最好的信息增益 bestInfoGain=infoGain # 将当前的分割的信息增益赋值为最好信息增益 bestFeature=i # 分割的最好特征列赋为i return bestFeature # 返回分割后信息增益最大的特征列]]></content>
-      <categories>
-        <category>Machine Learning</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>machine learning</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[Mongodb学习笔记（一）]]></title>
-    <url>%2F2017%2F11%2F07%2FMongoDB%20%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%2F</url>
-    <content type="text"><![CDATA[MongoDB 学习笔记（一）mongodb是一种非结构化存储数据库，它的数据是以文档为基础的在本地以二进制形式进行存储（Bosn），虽然有与sql查询语句相似的方式，但与SQL语法没有任何关系，更像是一种面相对象的编程，调用函数接口。 启动方式： 1234# apple @ admin [12:05:48] $ mongodb //启动一个mongodb服务器（默认端口在27017）,默认启动连接数据库为 ／data/db 若想指定数据库，需添加参数--dbpath 例： # apple @ admin [12:05:48] $ mongod --dbpath ~/workspace/stock/mongodb/data/db # apple @ admin [12:05:48] $ mongo //启动一个命令行交互程序，是mongodbd的一个进程 我在使用mongodb是主要用python编程进行数据录入和处理，因此使用mongodb提供的pymongo包在程序中连接数据库进行操作 连接数据库： 123from pymongo import MongoClient client=MongoClient() //创建一个服务器进程，默认自动创建端口 db = client['STOCK'] //连接到数据库STOCK 常用数据库操作增：函数名：insert_one() 作用：用于插入一个文档 使用格式：db.get_collection(‘CollectionName’).insert_one({‘key’:’value’}) 函数名：insert_many() 作用：用于插入多个文档 使用格式：db.get_collection(‘CollectionName’).insert_many([ {‘key’: i } ]for i in range(n)) 12345Acoll=db['SEquA'] Aresult=Acoll.insert_many( [ &#123; "ticker": SA['ticker'][i], "secShortName": SA['secShortName'][i]&#125;for i in range(len(SA))]) 查：函数名：find() 作用：查找所需要的文档 使用格式：db.get_collection(‘CollectionName’).find({‘key’:’value’}) 其他使用方式查看：http://api.mongodb.com/python/current/api/pymongo/collection.html?_ga=1.224606170.1159885722.1489465777#pymongo.collection.Collection.find 1234567ATicker=db.get_collection('SEquA').find( &#123;&#125;, &#123; 'ticker': 1, '_id':0&#125;) 注意：find()函数查找所返回的格式是dict,关于dict对象的操作方式自行查找改：函数名：update() 作用：对指定文档进行更新和添加 使用格式：db.get_collection(‘CollectionName’).update({filter},{operation}, otherparameter…) 12345678910111213db.get_collection("SConC").update( &#123; "c_name": SConC['c_name'][i]&#125;, &#123; "$set": &#123; SConC['code'][i]: &#123; "name": SConC['name'][i] &#125; &#125;&#125;, upsert=True)]]></content>
-      <categories>
-        <category>Mongodb</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>mongodb</tag>
-      </tags>
-  </entry>
 </search>
