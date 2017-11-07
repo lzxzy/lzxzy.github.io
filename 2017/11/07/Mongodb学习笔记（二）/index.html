@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="python ,mongodb" />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="Mongodb学习笔记（二） 关于Unicode字符串的一点说明你可能已经注意到，之前存入数据库的事常规的Python字符串，这与我们从数据库服务器里取回来的看起来不同（比如 u’Mike’ 而不是‘Mike’）。下面简单解释一下。  MongoDB 以格式保存数据. BSON 字符串都是 UTF-8编码的， 所以PyMongo必须确保它保存的字符串值包含有效地 UTF-8数据.常规字符串 ( )">
+<meta name="description" content="关于MongoDB Unicode编码问题">
+<meta name="keywords" content="python ,mongodb">
 <meta property="og:type" content="article">
-<meta property="og:title" content="叶言">
+<meta property="og:title" content="Mongodb学习笔记（二）">
 <meta property="og:url" content="http://yoursite.com/2017/11/07/Mongodb学习笔记（二）/index.html">
 <meta property="og:site_name" content="叶言">
-<meta property="og:description" content="Mongodb学习笔记（二） 关于Unicode字符串的一点说明你可能已经注意到，之前存入数据库的事常规的Python字符串，这与我们从数据库服务器里取回来的看起来不同（比如 u’Mike’ 而不是‘Mike’）。下面简单解释一下。  MongoDB 以格式保存数据. BSON 字符串都是 UTF-8编码的， 所以PyMongo必须确保它保存的字符串值包含有效地 UTF-8数据.常规字符串 ( )">
+<meta property="og:description" content="关于MongoDB Unicode编码问题">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-06T21:35:41.000Z">
+<meta property="og:updated_time" content="2017-11-07T05:19:51.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="叶言">
-<meta name="twitter:description" content="Mongodb学习笔记（二） 关于Unicode字符串的一点说明你可能已经注意到，之前存入数据库的事常规的Python字符串，这与我们从数据库服务器里取回来的看起来不同（比如 u’Mike’ 而不是‘Mike’）。下面简单解释一下。  MongoDB 以格式保存数据. BSON 字符串都是 UTF-8编码的， 所以PyMongo必须确保它保存的字符串值包含有效地 UTF-8数据.常规字符串 ( )">
+<meta name="twitter:title" content="Mongodb学习笔记（二）">
+<meta name="twitter:description" content="关于MongoDB Unicode编码问题">
 
 
 
@@ -125,7 +126,7 @@
 
 
 
-  <title> | 叶言</title>
+  <title>Mongodb学习笔记（二） | 叶言</title>
   
 
 
@@ -303,7 +304,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">Mongodb学习笔记（二）</h1>
         
 
         <div class="post-meta">
@@ -326,6 +327,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">Mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -338,6 +361,10 @@
 
           
 
+          
+              <div class="post-description">
+                  关于MongoDB Unicode编码问题
+              </div>
           
 
         </div>
@@ -404,6 +431,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/mongodb/" rel="tag"># mongodb</a>
+          
+        </div>
+      
 
       
       
@@ -413,8 +448,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/07/决策树/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2017/11/07/决策树/" rel="next" title="决策树">
+                <i class="fa fa-chevron-left"></i> 决策树
               </a>
             
           </div>
@@ -514,7 +549,25 @@
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
             
 
           </nav>
