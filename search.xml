@@ -8,7 +8,8 @@
         <category>生活</category>
       </categories>
       <tags>
-        <tag>随记，生活</tag>
+        <tag>随记</tag>
+        <tag>生活</tag>
       </tags>
   </entry>
   <entry>
@@ -21,6 +22,7 @@
       <tags>
         <tag>python</tag>
         <tag>mongodb</tag>
+        <tag>pymongo</tag>
       </tags>
   </entry>
   <entry>
@@ -32,7 +34,7 @@
       </categories>
       <tags>
         <tag>python</tag>
-        <tag>mongodb</tag>
+        <tag>machine learning</tag>
       </tags>
   </entry>
   <entry>

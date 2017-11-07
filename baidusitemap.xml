@@ -4,19 +4,45 @@
 
     
   <url>
-    <loc>http://yoursite.com/2017/11/07/test_image/</loc>
-    <lastmod>2017-11-07T06:02:50.000Z</lastmod>
+    <loc>http://yoursite.com/2017/11/07/%E5%86%B3%E7%AD%96%E6%A0%91/</loc>
+    <lastmod>2017-11-07T06:08:45.000Z</lastmod>
     <data>
         <display>
-        <title>test_image</title>
-        <pubTime>2017-11-07T05:57:21.000Z</pubTime>
+        <title>决策树</title>
+        <pubTime>2017-11-06T20:11:24.000Z</pubTime>
         
-        <tag>随记，生活</tag>
+        <tag>python</tag>
+         
+        <tag>machine learning</tag>
          
          
            
              
-              <breadCrumb title="生活" url="http://yoursite.com/categories/%E7%94%9F%E6%B4%BB/"/>
+              <breadCrumb title="Machine Learning" url="http://yoursite.com/categories/Machine-Learning/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://yoursite.com/2017/11/07/Mongodb%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/</loc>
+    <lastmod>2017-11-07T06:08:36.000Z</lastmod>
+    <data>
+        <display>
+        <title>Mongodb学习笔记（二）</title>
+        <pubTime>2017-11-06T21:34:33.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>mongodb</tag>
+         
+        <tag>pymongo</tag>
+         
+         
+           
+             
+              <breadCrumb title="Mongodb" url="http://yoursite.com/categories/Mongodb/"/>
           
         </display>
     </data>
@@ -25,7 +51,7 @@
     
   <url>
     <loc>http://yoursite.com/2017/11/07/MongoDB%20%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/</loc>
-    <lastmod>2017-11-07T05:47:38.000Z</lastmod>
+    <lastmod>2017-11-07T06:08:16.000Z</lastmod>
     <data>
         <display>
         <title>MongoDB 学习笔记（一）</title>
@@ -46,43 +72,21 @@
 
     
   <url>
-    <loc>http://yoursite.com/2017/11/07/Mongodb%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/</loc>
-    <lastmod>2017-11-07T05:47:18.000Z</lastmod>
+    <loc>http://yoursite.com/2017/11/07/test_image/</loc>
+    <lastmod>2017-11-07T06:08:01.000Z</lastmod>
     <data>
         <display>
-        <title>Mongodb学习笔记（二）</title>
-        <pubTime>2017-11-06T21:34:33.000Z</pubTime>
+        <title>test_image</title>
+        <pubTime>2017-11-07T05:57:21.000Z</pubTime>
         
-        <tag>python</tag>
+        <tag>随记</tag>
          
-        <tag>mongodb</tag>
+        <tag>生活</tag>
          
          
            
              
-              <breadCrumb title="Mongodb" url="http://yoursite.com/categories/Mongodb/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yoursite.com/2017/11/07/%E5%86%B3%E7%AD%96%E6%A0%91/</loc>
-    <lastmod>2017-11-07T05:47:18.000Z</lastmod>
-    <data>
-        <display>
-        <title>决策树</title>
-        <pubTime>2017-11-06T20:11:24.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-        <tag>mongodb</tag>
-         
-         
-           
-             
-              <breadCrumb title="Machine Learning" url="http://yoursite.com/categories/Machine-Learning/"/>
+              <breadCrumb title="生活" url="http://yoursite.com/categories/%E7%94%9F%E6%B4%BB/"/>
           
         </display>
     </data>
