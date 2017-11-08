@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[TensorFlow学习(三)]]></title>
+    <url>%2F2017%2F11%2F08%2FTensorFlow%E5%AD%A6%E4%B9%A0(%E4%B8%89)%2F</url>
+    <content type="text"><![CDATA[Tensorflow 学习笔记（三）_卷积神经网手写数字识别先借助上一篇实现softmax回归时读入数据和初始化会话 12345678import tensorflow as tffrom tensorflow.examples.tutorials.mnist import input_datamnist = input_data.read_data_sets('MNIST_data', one_hot=True)sess = tf.InteractiveSession()x = tf.placeholder(tf.float32, shape=[None, 784])y_ = tf.placeholder(tf.float32, shape=[None, 10]) 构建多层卷积网初始化参数（权重&amp;偏置）由于神经网络每一层都有很多参数，同时模型中的权重在初始化时应该加入少量的噪声来打破对称性以及避免0梯度。为了方便定义两个函数用于初始化。 1234567def weight_variable(shape): initial = tf.truncated_normal(shape,stddev=0.1) return tf.Variable(initial)def bias_variable(shape): inital = tf.constant(0.1,shape=shape) return tf.Variable(inital) 卷积和池化(这一部分不是很懂) TensorFlow在卷积和池化上有很强的灵活性。我们怎么处理边界？步长应该设多大？在这个实例里，我们会一直使用vanilla版本。我们的卷积使用1步长（stride size），0边距（padding size）的模板，保证输出和输入是同一个大小。我们的池化用简单传统的2x2大小的模板做max pooling。为了代码更简洁，我们把这部分抽象成一个函数。 1234def conv2d(x,W): return tf.nn.conv2d(x,W,strides=[1,1,1,1],padding='SAME')def max_pool_2x2(x): return tf.nn.max_pool(x,ksize=[1,2,2,1],strides=[1,2,2,1],padding='SAME') 两层卷积第一层1234567W_conv1 = weight_variable([5,5,1,32])b_conv1 = bias_variable([32])x_image = tf.reshape(x,[-1,28,28,1])h_conv1 = tf.nn.relu(conv2d(x_image,W_conv1)+b_conv1)h_pool1 = max_pool_2x2(h_conv1) 第二层12345W_conv2 = weight_variable([5, 5, 32, 64])b_conv2 = bias_variable([64])h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)h_pool2 = max_pool_2x2(h_conv2) 全连接层12345W_fc1 = weight_variable([7*7*64,1024])b_fc1 = bias_variable([1024])h_pool2_flat = tf.reshape(h_pool2,[-1,7*7*64])h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat,W_fc1)+b_fc1) Dropout(为了防止过拟合) 12keep_prob = tf.placeholder(tf.float32)h_fc1_drop = tf.nn.dropout(h_fc1,keep_prob) 输出层（采用softmax回归）12345W_fc2 = weight_variable([1024, 10])b_fc2 = bias_variable([10])#softmaxy_conv=tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2) 模型训练和评估训练方式和上一篇softmax的流程是一样的，即现描述图，再执行图，不过采用了更为复杂的权重优化方式AdamOptimizer来最小化损失函数。 123456789101112131415cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_,logits=y_conv))train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)correct_prediction = tf.equal(tf.argmax(y_conv,1),tf.argmax(y_,1))accuracy = tf.reduce_mean(tf.cast(correct_prediction,tf.float32))sess.run(tf.global_variables_initializer())for i in range(20000): batch = mnist.train.next_batch(50) if i%100 == 0: train_accuracy = accuracy.eval(feed_dict=&#123; x:batch[0], y_: batch[1], keep_prob: 1.0&#125;) print("step %d, training accuracy %g"%(i, train_accuracy)) train_step.run(feed_dict=&#123;x: batch[0], y_: batch[1], keep_prob: 0.5&#125;)print("test accuracy %g"%accuracy.eval(feed_dict=&#123; x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0&#125;)) 结果 运行结果 显示最后识别准确率为99.2% 结论在使用softmax回归进行训练的时候识别率为92%，但速度较快可以接受，不过识别率比较低，在使用了深度学习构建神经网的方法进行训练后，速度大幅下降整个训练过成在我的笔记本上跑了大概一个多小时，这是无法接受的，不过最终的训练识别率达到了99.2%提升十分明显，事实说明进行深度学习还是需要一定的硬件支持。 参考 http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/mnist_pros.html]]></content>
+      <categories>
+        <category>TensorFlow</category>
+      </categories>
+      <tags>
+        <tag>DeepLearning</tag>
+        <tag>tensorflow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[TensorFlow学习(二)]]></title>
+    <url>%2F2017%2F11%2F08%2FTensorFlow%E5%AD%A6%E4%B9%A0(%E4%BA%8C)%2F</url>
+    <content type="text"><![CDATA[Tensorflow 学习笔记（二）_MNIST手写数字识别下载数据集12from tensorflow.examples.tutorials.mnist import input_datamnist = input_data.read_data_sets("MNIST_data/", one_hot=True) 里面包含有55,000 数据点作为训练集 (mnist.train), 10,000 数据点作为测试集 (mnist.test), 并有 5,000 数据作验证 (mnist.validation).每一张图片包含有28*28个像素点，被读取后，在代码展开成一个长度为784的数组 softmax回归模型实现导入tensorflow初始化一个输入 12import tensorflow as tfx = tf.placeholder(tf.float32,[None,784]) placeholder()生成指定大小的占位符，即它里面的内容是什么不重要，目的是为了能够将读入的数据以合适的大小填入占位符。 初始化权重和偏置 12W = tf.Variable(tf.zeros([784,10]))b = tf.Variable(tf.zeros([10])) W和b也可以用placeholder()来初始化，但由于它们是变量，在后面的图计算过程中不断迭代更新，所以tensorflow有更好用的表示方法Variable(),它表示一张可修改的张量。注意，W的维度是[784，10]，因为我们想要用784维的图片向量乘以它以得到一个10维的证据值向量，每一位对应不同数字类。b的形状是[10]，所以我们可以直接把它加到输出上面。 构建模型 1y = tf.nn.softmax(tf.matmul(x,W)+b) 训练模型定义评价指标（损失函数） y 是我们预测的概率分布, y’ 是实际的分布 初始化占位符读入，图片真实结果 1y_ = tf.placeholder(tf.float32,[None,10]) 计算损失函数 1cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1])) 利用tensorflow训练模型，采用tensorflow提供的学习方法最小化损失函数这里采用了梯度下降的方法进行学习，后面可以学到更多优化参数的方法 1train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy) 创建会话 开始学习 12345sess = tf.InteractiveSession()tf.global_variables_initializer().run()for i in range(1000): batch_xs,batch_ys = mnist.train.next_batch(100) sess.run(train_step,feed_dict=&#123;x:batch_xs,y_:batch_ys&#125;) 模型评估 123correct_prediction = tf.equal(tf.argmax(y,1),tf.argmax(y_,1))accuracy = tf.reduce_mean(tf.cast(correct_prediction,tf.float32))print (sess.run(accuracy,feed_dict=&#123;x:mnist.test.images, y_: mnist.test.labels&#125;)) 评估预测值与真实值的差距，采用两个向量的距离平均值作为结果注意：评估采用的是整体的平均值即所有图片的平均值，而不是一张对一张的方式，这样有更好的全局结果 参考 http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/mnist_beginners.htmlhttps://www.tensorflow.org/get_started/mnist/beginners]]></content>
+      <categories>
+        <category>TensorFlow</category>
+      </categories>
+      <tags>
+        <tag>DeepLearning</tag>
+        <tag>tensorflow</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[TensorFlow学习(一)]]></title>
-    <url>%2F2017%2F11%2F08%2F2017-11-08-untitled%2F</url>
+    <url>%2F2017%2F11%2F08%2FTensorFlow%E5%AD%A6%E4%B9%A0(%E4%B8%80)%2F</url>
     <content type="text"><![CDATA[Tensorflow 学习（一）综述TensorFlow 是一个编程系统, 使用图来表示计算任务. 图中的节点被称之为 op (operation 的缩写). 一个 op 获得 0 个或多个 Tensor, 执行计算, 产生 0 个或多个 Tensor. 每个 Tensor 是一个类型化的多维数组.一个 TensorFlow 图描述了计算的过程. 为了进行计算, 图必须在 会话(session) 里被启动. 会话 将图的 op 分发到诸如 CPU 或 GPU 之类的 设备 上, 同时提供执行 op 的方法. 这些方法执行后, 将产生的 tensor 返回. 在 Python 语言中, 返回的 tensor 是 numpy ndarray 对象. 图 TensorFlow 程序通常被组织成一个构建阶段和一个执行阶段. 在构建阶段, op 的执行步骤被描述成一个图. 在执行阶段, 使用会话执行图中的 op. 构建图构建图的第一步, 是创建源 op (source op). 源 op 不需要任何输入, 例如 常量 (Constant). 源 op 的输出被传递给其它 op 做运算.Python 库中, op 构造器的返回值代表被构造出的 op 的输出, 这些返回值可以传递给其它 op 构造器作为输入. TensorFlow Python 库有一个默认图 (default graph), op 构造器可以为其增加节点. 这个默认图对 许多程序来说已经足够用了. 1234567891011121314import tensorflow as tf# 创建一个常量 op, 产生一个 1x2 矩阵. 这个 op 被作为一个节点# 加到默认图中.## 构造器的返回值代表该常量 op 的返回值.matrix1 = tf.constant([[3., 3.]])# 创建另外一个常量 op, 产生一个 2x1 矩阵.matrix2 = tf.constant([[2.],[2.]])# 创建一个矩阵乘法 matmul op , 把 'matrix1' 和 'matrix2' 作为输入.# 返回值 'product' 代表矩阵乘法的结果.product = tf.matmul(matrix1, matrix2) 默认图现在有三个节点, 两个 constant() op, 和一个matmul() op. 为了真正进行矩阵相乘运算, 并得到矩阵乘法的 结果, 你必须在会话里启动这个图. 启动图启动图的第一步是创建一个 Session 对象, 如果无任何创建参数, 会话构造器将启动默认图. 123456789101112131415161718# 启动默认图.sess = tf.Session()# 调用 sess 的 'run()' 方法来执行矩阵乘法 op, 传入 'product' 作为该方法的参数. # 上面提到, 'product' 代表了矩阵乘法 op 的输出, 传入它是向方法表明, 我们希望取回# 矩阵乘法 op 的输出.## 整个执行过程是自动化的, 会话负责传递 op 所需的全部输入. op 通常是并发执行的.# # 函数调用 'run(product)' 触发了图中三个 op (两个常量 op 和一个矩阵乘法 op) 的执行.## 返回值 'result' 是一个 numpy `ndarray` 对象.result = sess.run(product)print result# ==&gt; [[ 12.]]# 任务完成, 关闭会话.sess.close() Session 对象在使用完后需要关闭以释放资源. 除了显式调用 close 外, 也可以使用 “with” 代码块 来自动完成关闭动作. 123with tf.Session() as sess: result = sess.run([product]) print result]]></content>
       <categories>
         <category>TensorFlow</category>
       </categories>
       <tags>
-        <tag>tensorflow</tag>
         <tag>DeepLearning</tag>
+        <tag>tensorflow</tag>
       </tags>
   </entry>
   <entry>
@@ -20,8 +44,8 @@
         <category>pytorch</category>
       </categories>
       <tags>
-        <tag>DeepLearning</tag>
         <tag>pytorch</tag>
+        <tag>DeepLearning</tag>
       </tags>
   </entry>
   <entry>

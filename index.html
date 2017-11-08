@@ -296,7 +296,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/08/2017-11-08-untitled/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/08/TensorFlow学习(三)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Liu Zongxuan">
@@ -315,7 +315,339 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/08/2017-11-08-untitled/" itemprop="url">TensorFlow学习(一)</a></h1>
+                <a class="post-title-link" href="/2017/11/08/TensorFlow学习(三)/" itemprop="url">TensorFlow学习(三)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-08T15:32:37+08:00">
+                2017-11-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TensorFlow/" itemprop="url" rel="index">
+                    <span itemprop="name">TensorFlow</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Tensorflow-学习笔记（三）-卷积神经网手写数字识别"><a href="#Tensorflow-学习笔记（三）-卷积神经网手写数字识别" class="headerlink" title="Tensorflow 学习笔记（三）_卷积神经网手写数字识别"></a>Tensorflow 学习笔记（三）_卷积神经网手写数字识别</h1><p>先借助上一篇实现softmax回归时读入数据和初始化<strong>会话</strong></p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">import</span> tensorflow as tf</div><div class="line">from tensorflow.examples.tutorials.mnist <span class="built_in">import</span> input_data</div><div class="line"><span class="attr">mnist</span> = input_data.read_data_sets('MNIST_data', <span class="attr">one_hot=True)</span></div><div class="line"></div><div class="line"><span class="attr">sess</span> = tf.InteractiveSession()</div><div class="line"></div><div class="line"><span class="attr">x</span> = tf.placeholder(tf.float32, <span class="attr">shape=[None,</span> <span class="number">784</span>])</div><div class="line"><span class="attr">y_</span> = tf.placeholder(tf.float32, <span class="attr">shape=[None,</span> <span class="number">10</span>])</div></pre></td></tr></table></figure>
+<h2 id="构建多层卷积网"><a href="#构建多层卷积网" class="headerlink" title="构建多层卷积网"></a>构建多层卷积网</h2><h3 id="初始化参数（权重-amp-偏置）"><a href="#初始化参数（权重-amp-偏置）" class="headerlink" title="初始化参数（权重&amp;偏置）"></a>初始化参数（权重&amp;偏置）</h3><p>由于神经网络每一层都有很多参数，同时模型中的权重在初始化时应该加入少量的噪声来打破对称性以及避免0梯度。为了方便定义两个函数用于初始化。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">weight_variable</span><span class="params">(shape)</span>:</span></div><div class="line">    initial = tf.truncated_normal(shape,stddev=<span class="number">0.1</span>)</div><div class="line">    <span class="keyword">return</span> tf.Variable(initial)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">bias_variable</span><span class="params">(shape)</span>:</span></div><div class="line">    inital = tf.constant(<span class="number">0.1</span>,shape=shape)</div><div class="line">    <span class="keyword">return</span> tf.Variable(inital)</div></pre></td></tr></table></figure>
+<h3 id="卷积和池化"><a href="#卷积和池化" class="headerlink" title="卷积和池化"></a>卷积和池化</h3><p>(这一部分不是很懂)</p>
+<blockquote>
+<p>TensorFlow在卷积和池化上有很强的灵活性。我们怎么处理边界？步长应该设多大？在这个实例里，我们会一直使用vanilla版本。我们的卷积使用1步长（stride size），0边距（padding size）的模板，保证输出和输入是同一个大小。我们的池化用简单传统的2x2大小的模板做max pooling。为了代码更简洁，我们把这部分抽象成一个函数。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv2d</span><span class="params">(x,W)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.nn.conv2d(x,W,strides=[<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>],padding=<span class="string">'SAME'</span>)</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">max_pool_2x2</span><span class="params">(x)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.nn.max_pool(x,ksize=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">1</span>],strides=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">1</span>],padding=<span class="string">'SAME'</span>)</div></pre></td></tr></table></figure>
+<h3 id="两层卷积"><a href="#两层卷积" class="headerlink" title="两层卷积"></a>两层卷积</h3><h4 id="第一层"><a href="#第一层" class="headerlink" title="第一层"></a>第一层</h4><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="attr">W_conv1</span> = weight_variable([<span class="number">5</span>,<span class="number">5</span>,<span class="number">1</span>,<span class="number">32</span>])</div><div class="line"><span class="attr">b_conv1</span> = bias_variable([<span class="number">32</span>])</div><div class="line"></div><div class="line"><span class="attr">x_image</span> = tf.reshape(x,[-<span class="number">1</span>,<span class="number">28</span>,<span class="number">28</span>,<span class="number">1</span>])</div><div class="line"></div><div class="line"><span class="attr">h_conv1</span> = tf.nn.relu(conv2d(x_image,W_conv1)+b_conv1)</div><div class="line"><span class="attr">h_pool1</span> = max_pool_2x2(h_conv1)</div></pre></td></tr></table></figure>
+<h4 id="第二层"><a href="#第二层" class="headerlink" title="第二层"></a>第二层</h4><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="attr">W_conv2</span> = weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">32</span>, <span class="number">64</span>])</div><div class="line"><span class="attr">b_conv2</span> = bias_variable([<span class="number">64</span>])</div><div class="line"></div><div class="line"><span class="attr">h_conv2</span> = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)</div><div class="line"><span class="attr">h_pool2</span> = max_pool_2x2(h_conv2)</div></pre></td></tr></table></figure>
+<h3 id="全连接层"><a href="#全连接层" class="headerlink" title="全连接层"></a>全连接层</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">W_fc1 = weight_variable([<span class="number">7</span>*<span class="number">7</span>*<span class="number">64</span>,<span class="number">1024</span>])</div><div class="line">b_fc1 = bias_variable([<span class="number">1024</span>])</div><div class="line"></div><div class="line">h_pool2_flat = tf.reshape(h_pool2,[<span class="number">-1</span>,<span class="number">7</span>*<span class="number">7</span>*<span class="number">64</span>])</div><div class="line">h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat,W_fc1)+b_fc1)</div></pre></td></tr></table></figure>
+<p>Dropout(为了防止过拟合)</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attr">keep_prob</span> = tf.placeholder(tf.float32)</div><div class="line"><span class="attr">h_fc1_drop</span> = tf.nn.dropout(h_fc1,keep_prob)</div></pre></td></tr></table></figure>
+<h3 id="输出层（采用softmax回归）"><a href="#输出层（采用softmax回归）" class="headerlink" title="输出层（采用softmax回归）"></a>输出层（采用softmax回归）</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="attr">W_fc2</span> = weight_variable([<span class="number">1024</span>, <span class="number">10</span>])</div><div class="line"><span class="attr">b_fc2</span> = bias_variable([<span class="number">10</span>])</div><div class="line"></div><div class="line"><span class="comment">#softmax</span></div><div class="line"><span class="attr">y_conv</span>=tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)</div></pre></td></tr></table></figure>
+<h2 id="模型训练和评估"><a href="#模型训练和评估" class="headerlink" title="模型训练和评估"></a>模型训练和评估</h2><p>训练方式和上一篇softmax的流程是一样的，即现描述图，再执行图，不过采用了更为复杂的权重优化方式AdamOptimizer来最小化损失函数。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">cross_entropy = <span class="keyword">tf</span>.reduce_mean(<span class="keyword">tf</span>.<span class="keyword">nn</span>.softmax_cross_entropy_with_logits(labels=y_,logits=y_conv))</div><div class="line">train_step = <span class="keyword">tf</span>.train.AdamOptimizer(<span class="number">1</span><span class="keyword">e</span>-<span class="number">4</span>).minimize(cross_entropy)</div><div class="line">correct_prediction = <span class="keyword">tf</span>.equal(<span class="keyword">tf</span>.argmax(y_conv,<span class="number">1</span>),<span class="keyword">tf</span>.argmax(y_,<span class="number">1</span>))</div><div class="line">accuracy = <span class="keyword">tf</span>.reduce_mean(<span class="keyword">tf</span>.cast(correct_prediction,<span class="keyword">tf</span>.float32))</div><div class="line">sess.run(<span class="keyword">tf</span>.global_variables_initializer())</div><div class="line"><span class="keyword">for</span> i in <span class="built_in">range</span>(<span class="number">20000</span>):</div><div class="line">  batch = mnist.train.next_batch(<span class="number">50</span>)</div><div class="line">  <span class="keyword">if</span> i%<span class="number">100</span> == <span class="number">0</span>:</div><div class="line">    train_accuracy = accuracy.<span class="built_in">eval</span>(feed_dict=&#123;</div><div class="line">        <span class="keyword">x</span>:batch[<span class="number">0</span>], y_: batch[<span class="number">1</span>], keep_pro<span class="variable">b:</span> <span class="number">1.0</span>&#125;)</div><div class="line">    <span class="keyword">print</span>(<span class="string">"step %d, training accuracy %g"</span>%(i, train_accuracy))</div><div class="line">  train_step.run(feed_dict=&#123;<span class="keyword">x</span>: batch[<span class="number">0</span>], y_: batch[<span class="number">1</span>], keep_pro<span class="variable">b:</span> <span class="number">0.5</span>&#125;)</div><div class="line"></div><div class="line"><span class="keyword">print</span>(<span class="string">"test accuracy %g"</span>%accuracy.<span class="built_in">eval</span>(feed_dict=&#123;</div><div class="line">    <span class="keyword">x</span>: mnist.test.images, y_: mnist.test.labels, keep_pro<span class="variable">b:</span> <span class="number">1.0</span>&#125;))</div></pre></td></tr></table></figure>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p><img src="http://oz2l9lnu9.bkt.clouddn.com/8f7622fb-7d07-40b8-af62-134f48669c7f.png" alt="@运行结果"></p>
+<p>运行结果</p>
+<p>显示最后识别准确率为99.2%</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>在使用softmax回归进行训练的时候识别率为92%，但速度较快可以接受，不过识别率比较低，在使用了深度学习构建神经网的方法进行训练后，速度大幅下降整个训练过成在我的笔记本上跑了大概一个多小时，这是无法接受的，不过最终的训练识别率达到了99.2%提升十分明显，事实说明进行深度学习还是需要一定的硬件支持。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><blockquote>
+<p><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/mnist_pros.html" target="_blank" rel="external">http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/mnist_pros.html</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/08/TensorFlow学习(二)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Liu Zongxuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="叶言">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/08/TensorFlow学习(二)/" itemprop="url">TensorFlow学习(二)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-08T15:30:53+08:00">
+                2017-11-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TensorFlow/" itemprop="url" rel="index">
+                    <span itemprop="name">TensorFlow</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Tensorflow-学习笔记（二）-MNIST手写数字识别"><a href="#Tensorflow-学习笔记（二）-MNIST手写数字识别" class="headerlink" title="Tensorflow 学习笔记（二）_MNIST手写数字识别"></a>Tensorflow 学习笔记（二）_MNIST手写数字识别</h1><h2 id="下载数据集"><a href="#下载数据集" class="headerlink" title="下载数据集"></a>下载数据集</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> tensorflow.examples.tutorials.mnist import input_data</div><div class="line">mnist = input_data.read_data_sets(<span class="string">"MNIST_data/"</span>, <span class="attribute">one_hot</span>=<span class="literal">True</span>)</div></pre></td></tr></table></figure>
+<p>里面包含有55,000 数据点作为训练集 (mnist.train), 10,000 数据点作为测试集 (mnist.test), 并有 5,000 数据作验证 (mnist.validation).<br>每一张图片包含有28*28个像素点，被读取后，在代码展开成一个长度为784的数组</p>
+<h2 id="softmax回归模型实现"><a href="#softmax回归模型实现" class="headerlink" title="softmax回归模型实现"></a>softmax回归模型实现</h2><p><strong>导入tensorflow初始化一个输入</strong></p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">import tensorflow <span class="keyword">as</span> <span class="keyword">tf</span></div><div class="line"><span class="keyword">x</span> = <span class="keyword">tf</span>.placeholder(<span class="keyword">tf</span>.float32,[None,<span class="number">784</span>])</div></pre></td></tr></table></figure>
+<p>placeholder()生成指定大小的占位符，即它里面的内容是什么不重要，目的是为了能够将读入的数据以合适的大小填入占位符。</p>
+<p><strong>初始化权重和偏置</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attr">W</span> = tf.Variable(tf.zeros([<span class="number">784</span>,<span class="number">10</span>]))</div><div class="line"><span class="attr">b</span> = tf.Variable(tf.zeros([<span class="number">10</span>]))</div></pre></td></tr></table></figure>
+<p>W和b也可以用placeholder()来初始化，但由于它们是变量，在后面的图计算过程中不断迭代更新，所以tensorflow有更好用的表示方法Variable(),它表示一张可修改的张量。<br><strong>注意，W的维度是[784，10]，因为我们想要用784维的图片向量乘以它以得到一个10维的证据值向量，每一位对应不同数字类。b的形状是[10]，所以我们可以直接把它加到输出上面。</strong></p>
+<p><strong>构建模型</strong> </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">y = tf<span class="selector-class">.nn</span><span class="selector-class">.softmax</span>(tf.matmul(x,W)+b)</div></pre></td></tr></table></figure>
+<p><strong>训练模型</strong><br>定义评价指标（损失函数） </p>
+<p>y 是我们预测的概率分布, y’ 是实际的分布</p>
+<p>初始化占位符读入，图片真实结果</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">y_</span> = tf.placeholder(tf.float32,[None,<span class="number">10</span>])</div></pre></td></tr></table></figure>
+<p><strong>计算损失函数</strong></p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cross_entropy = <span class="keyword">tf</span>.reduce_mean(-<span class="keyword">tf</span>.reduce_sum(y_ * <span class="keyword">tf</span>.<span class="built_in">log</span>(<span class="keyword">y</span>), reduction_indices=[<span class="number">1</span>]))</div></pre></td></tr></table></figure>
+<p><em>利用tensorflow训练模型，采用tensorflow提供的学习方法最小化损失函数</em><br>这里采用了梯度下降的方法进行学习，后面可以学到更多优化参数的方法</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">train_step = tf<span class="selector-class">.train</span><span class="selector-class">.GradientDescentOptimizer</span>(<span class="number">0.5</span>).minimize(cross_entropy)</div></pre></td></tr></table></figure>
+<p><strong>创建会话 开始学习</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sess = tf.InteractiveSession()</div><div class="line">tf.global_variables_initializer().run()</div><div class="line"><span class="keyword">for</span> <span class="selector-tag">i</span> <span class="keyword">in</span> range(<span class="number">1000</span>):</div><div class="line">    batch_xs,batch_ys = mnist<span class="selector-class">.train</span><span class="selector-class">.next_batch</span>(<span class="number">100</span>)</div><div class="line">    sess.run(train_step,feed_dict=&#123;x:batch_xs,y_:batch_ys&#125;)</div></pre></td></tr></table></figure>
+<p><strong>模型评估</strong></p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">correct_prediction = <span class="keyword">tf</span>.equal(<span class="keyword">tf</span>.argmax(<span class="keyword">y</span>,<span class="number">1</span>),<span class="keyword">tf</span>.argmax(y_,<span class="number">1</span>))</div><div class="line">accuracy = <span class="keyword">tf</span>.reduce_mean(<span class="keyword">tf</span>.cast(correct_prediction,<span class="keyword">tf</span>.float32))</div><div class="line"><span class="keyword">print</span> (sess.run(accuracy,feed_dict=&#123;<span class="keyword">x</span>:mnist.test.images, y_: mnist.test.labels&#125;))</div></pre></td></tr></table></figure>
+<p>评估预测值与真实值的差距，采用两个向量的距离平均值作为结果<br><strong>注意：评估采用的是整体的平均值即所有图片的平均值，而不是一张对一张的方式，这样有更好的全局结果</strong></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><blockquote>
+<p><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/mnist_beginners.html" target="_blank" rel="external">http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/mnist_beginners.html</a><br><a href="https://www.tensorflow.org/get_started/mnist/beginners" target="_blank" rel="external">https://www.tensorflow.org/get_started/mnist/beginners</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/08/TensorFlow学习(一)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Liu Zongxuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="叶言">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/08/TensorFlow学习(一)/" itemprop="url">TensorFlow学习(一)</a></h1>
         
 
         <div class="post-meta">
@@ -388,19 +720,14 @@
 
       
         
-          
-            <h1 id="Tensorflow-学习（一）"><a href="#Tensorflow-学习（一）" class="headerlink" title="Tensorflow 学习（一）"></a>Tensorflow 学习（一）</h1><h2 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h2><p>TensorFlow 是一个<strong>编程系统</strong>, 使用<strong>图</strong>来表示<strong>计算任务</strong>. 图中的节点被称之为 op (operation 的缩写). 一个 op 获得 0 个或多个 Tensor, 执行计算, 产生 0 个或多个 Tensor. 每个 Tensor 是一个类型化的<strong>多维数组</strong>.<br>一个 TensorFlow 图描述了计算的过程. 为了进行计算, 图必须在 <strong>会话</strong>(session) 里被启动. 会话 将图的 op 分发到诸如 CPU 或 GPU 之类的 设备 上, 同时提供执行 op 的方法. 这些方法执行后, 将产生的 tensor 返回. 在 Python 语言中, 返回的 tensor 是 numpy ndarray 对象.</p>
-<h2 id="图"><a href="#图" class="headerlink" title="图"></a>图</h2><p> TensorFlow 程序通常被组织成一个<strong>构建阶段</strong>和一个<strong>执行阶段</strong>. 在构建阶段, op 的执行步骤被描述成一个图. 在执行阶段, 使用会话执行图中的 op.</p>
-<h3 id="构建图"><a href="#构建图" class="headerlink" title="构建图"></a>构建图</h3><p>构建图的第一步, 是创建源 op (source op). 源 op 不需要任何输入, 例如 常量 (Constant). 源 op 的输出被传递给其它 op 做运算.<br>Python 库中, op 构造器的返回值代表被构造出的 op 的输出, 这些返回值可以传递给其它 op 构造器作为输入.</p>
-<p>TensorFlow Python 库有一个默认图 (default graph), op 构造器可以为其增加节点. 这个默认图对 许多程序来说已经足够用了.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"></div><div class="line"><span class="comment"># 创建一个常量 op, 产生一个 1x2 矩阵. 这个 op 被作为一个节点</span></div><div class="line"><span class="comment"># 加到默认图中.</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># 构造器的返回值代表该常量 op 的返回值.</span></div><div class="line">matrix1 = tf.constant([[<span class="number">3.</span>, <span class="number">3.</span>]])</div><div class="line"></div><div class="line"><span class="comment"># 创建另外一个常量 op, 产生一个 2x1 矩阵.</span></div><div class="line">matrix2 = tf.constant([[<span class="number">2.</span>],[<span class="number">2.</span>]])</div><div class="line"></div><div class="line"><span class="comment"># 创建一个矩阵乘法 matmul op , 把 'matrix1' 和 'matrix2' 作为输入.</span></div><div class="line"><span class="comment"># 返回值 'product' 代表矩阵乘法的结果.</span></div><div class="line">product = tf.matmul(matrix1, matrix2)</div></pre></td></tr></table></figure>
-<p>默认图现在有三个节点, 两个 constant() op, 和一个matmul() op. 为了真正进行矩阵相乘运算, 并得到矩阵乘法的 结果, 你必须在会话里启动这个图.</p>
-<h3 id="启动图"><a href="#启动图" class="headerlink" title="启动图"></a>启动图</h3><p>启动图的第一步是创建一个 Session 对象, 如果无任何创建参数, 会话构造器将启动默认图.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 启动默认图.</span></div><div class="line">sess = tf.Session()</div><div class="line"></div><div class="line"><span class="comment"># 调用 sess 的 'run()' 方法来执行矩阵乘法 op, 传入 'product' 作为该方法的参数. </span></div><div class="line"><span class="comment"># 上面提到, 'product' 代表了矩阵乘法 op 的输出, 传入它是向方法表明, 我们希望取回</span></div><div class="line"><span class="comment"># 矩阵乘法 op 的输出.</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># 整个执行过程是自动化的, 会话负责传递 op 所需的全部输入. op 通常是并发执行的.</span></div><div class="line"><span class="comment"># </span></div><div class="line"><span class="comment"># 函数调用 'run(product)' 触发了图中三个 op (两个常量 op 和一个矩阵乘法 op) 的执行.</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># 返回值 'result' 是一个 numpy `ndarray` 对象.</span></div><div class="line">result = sess.run(product)</div><div class="line"><span class="keyword">print</span> result</div><div class="line"><span class="comment"># ==&gt; [[ 12.]]</span></div><div class="line"></div><div class="line"><span class="comment"># 任务完成, 关闭会话.</span></div><div class="line">sess.close()</div></pre></td></tr></table></figure>
-<p>Session 对象在使用完后需要关闭以释放资源. 除了显式调用 close 外, 也可以使用 “with” 代码块 来自动完成关闭动作.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">  result = sess.run([product])</div><div class="line">  <span class="keyword">print</span> result</div></pre></td></tr></table></figure>
-
-          
+          <h1 id="Tensorflow-学习（一）"><a href="#Tensorflow-学习（一）" class="headerlink" title="Tensorflow 学习（一）"></a>Tensorflow 学习（一）</h1><h2 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h2><p>TensorFlow 是一个<strong>编程系统</strong>, 使用<strong>图</strong>来表示<strong>计算任务</strong>. 图中的节点被称之为 op (operation 的缩写). 一个 op 获得 0 个或多个 Tensor, 执行计算, 产生 0 个或多个 Tensor. 每个 Tensor 是一个类型化的<strong>多维数组</strong>.<br>一个 TensorFlow 图描述了计算的过程. 为了进行计算, 图必须在 <strong>会话</strong>(session) 里被启动. 会话 将图的 op 分发到诸如 CPU 或 GPU 之类的 设备 上, 同时提供执行 op 的方法. 这些方法执行后, 将产生的 tensor 返回. 在 Python 语言中, 返回的 tensor 是 numpy ndarray 对象.<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/11/08/TensorFlow学习(一)/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1211,7 +1538,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
