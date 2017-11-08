@@ -1,148 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search> 
-  
-    
-    <entry>
-      <title><![CDATA[Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN]]></title>
-      <url>/2017/11/08/Pytorch%E5%AE%98%E6%96%B9%E6%95%99%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%BF%BB%E8%AF%91_ClassifyingNames_Charter-Level_RNN/</url>
-      <content type="html"><![CDATA[<h1 id="Pytorch官方教程代码翻译-ClassifyingNames-Charter-Level-RNN"><a href="#Pytorch官方教程代码翻译-ClassifyingNames-Charter-Level-RNN" class="headerlink" title="Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN"></a>Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN</h1><p>我们将建立并训练一个基于caharacter-level RNN（个人理解：字符级的RNN模型）来分类单词，该模型将单词当做一串字母读入，在每一轮训练中输出预测结果和隐藏状态，将其以前的隐藏状态提供给下一步。<br>我们将单词属于哪种语言作为最后的预测结果当做输出。<br>训练数据集采用来自18种语言的姓氏大概有1000多条。预测结果基于名字的拼写方式得出。 <a id="more"></a></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># coding=utf-8</span></div><div class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> unicode_literals,print_function,division</div><div class="line"><span class="keyword">from</span> io <span class="keyword">import</span> open</div><div class="line"><span class="keyword">import</span> glob</div><div class="line"><span class="keyword">import</span> torch</div><div class="line"><span class="keyword">import</span> unicodedata</div><div class="line"><span class="keyword">import</span> string</div><div class="line"></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line"><span class="string">准备数据:</span></div><div class="line"><span class="string">    在数据集data/names目录下有18个TXT文件被命名为"[language].txt"，每个文件包含一串名字，每行一个</span></div><div class="line"><span class="string">    大多数名字都是罗马字符（但我们仍需要将Unicode转为ASCII码）</span></div><div class="line"><span class="string">    </span></div><div class="line"><span class="string">    我们最终要得到一个将每种语言与其名字相对应的字典列表形式&#123;language:[names...]&#125;</span></div><div class="line"><span class="string">    变量 category 和 line （在例子中对应language和name)为以后方便扩展被使用</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">'''</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">findFiles</span><span class="params">(path)</span>:</span><span class="keyword">return</span> glob.glob(path)</div><div class="line"></div><div class="line">print(findFiles(<span class="string">'data/names/*.txt'</span>))</div><div class="line"></div><div class="line"></div><div class="line">all_letters = string.ascii_letters + <span class="string">" .,;'"</span></div><div class="line">n_letters = len(all_letters)</div><div class="line"></div><div class="line"><span class="comment">#将Unicode转为ASCII码</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">unicodeToAscii</span><span class="params">(s)</span>:</span></div><div class="line">    <span class="keyword">return</span> <span class="string">''</span>.join(</div><div class="line">        c <span class="keyword">for</span> c <span class="keyword">in</span> unicodedata.normalize(<span class="string">'NFD'</span>,s)</div><div class="line">        <span class="keyword">if</span> unicodedata.category(c) != <span class="string">'Mn'</span></div><div class="line">        <span class="keyword">and</span> c <span class="keyword">in</span> all_letters</div><div class="line">    )</div><div class="line"></div><div class="line">print(unicodeToAscii(<span class="string">'Ślusàrski'</span>))</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">#建立category-line字典，每种语言与其名字相对应的字典列表形式&#123;language:[names...]&#125;</span></div><div class="line">category_lines = &#123;&#125;</div><div class="line">all_categories = []</div><div class="line"></div><div class="line"><span class="comment">#读取文件进行行分割</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">readLines</span><span class="params">(filename)</span>:</span></div><div class="line">    lines = open(filename,encoding=<span class="string">'utf-8'</span>).read().strip().split(<span class="string">'\n'</span>)</div><div class="line">    <span class="keyword">return</span> [unicodeToAscii(line) <span class="keyword">for</span> line <span class="keyword">in</span> lines]</div><div class="line"></div><div class="line"><span class="keyword">for</span> filename <span class="keyword">in</span> findFiles(<span class="string">'data/names/*.txt'</span>):</div><div class="line">    category = filename.split(<span class="string">'/'</span>)[<span class="number">-1</span>].split(<span class="string">'.'</span>)[<span class="number">0</span>]</div><div class="line">    all_categories.append(category)</div><div class="line">    lines = readLines(filename)</div><div class="line">    category_lines[category] = lines</div><div class="line"></div><div class="line">n_categories = len(all_categories)</div><div class="line"></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line"><span class="string">将名字转为Tensor:</span></div><div class="line"><span class="string">    我们需要将已经组织好的名字转为Tensor变量使得GPU和pytorch可以使用</span></div><div class="line"><span class="string">    </span></div><div class="line"><span class="string">'''</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">letterToIndex</span><span class="params">(letter)</span>:</span></div><div class="line">    <span class="keyword">return</span> all_letters.find((letter))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">letterToTensor</span><span class="params">(letter)</span>:</span></div><div class="line">    tensor = torch.zeros(<span class="number">1</span>,n_letters)</div><div class="line">    tensor[<span class="number">0</span>][letterToIndex(letter)] = <span class="number">1</span></div><div class="line">    <span class="keyword">return</span> tensor</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">lineToTensor</span><span class="params">(line)</span>:</span></div><div class="line">    tensor = torch.zeros(len(line),<span class="number">1</span>,n_letters)</div><div class="line">    <span class="keyword">for</span> li,letter <span class="keyword">in</span> enumerate(line):</div><div class="line">        tensor[li][<span class="number">0</span>][letterToIndex(letter)] = <span class="number">1</span></div><div class="line">    <span class="keyword">return</span> tensor</div><div class="line"></div><div class="line"><span class="keyword">print</span> (letterToIndex(<span class="string">'J'</span>))</div><div class="line"><span class="keyword">print</span> (lineToTensor(<span class="string">'Jones'</span>).size())</div></pre></td></tr></table></figure>
-]]></content>
-      
-        <categories>
-            
-            <category> pytorch </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> pytorch </tag>
-            
-            <tag> DeepLearning </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[test_image]]></title>
-      <url>/2017/11/07/test_image/</url>
-      <content type="html"><![CDATA[<h1 id="test-image"><a href="#test-image" class="headerlink" title="test_image"></a>test_image</h1><p><img src="http://oz2l9lnu9.bkt.clouddn.com/58c25bce87839.jpg" alt="58c25bce87839"><br><img src="http://oz2l9lnu9.bkt.clouddn.com/o97tlb-1u46.jpg" alt="o97tlb-1u46"></p>
-]]></content>
-      
-        <categories>
-            
-            <category> 生活 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 随记 </tag>
-            
-            <tag> 生活 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Mongodb学习笔记（二）]]></title>
-      <url>/2017/11/07/Mongodb%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/</url>
-      <content type="html"><![CDATA[<h1 id="Mongodb学习笔记（二）"><a href="#Mongodb学习笔记（二）" class="headerlink" title="Mongodb学习笔记（二）"></a>Mongodb学习笔记（二）</h1><hr>
-<p><strong>关于Unicode字符串的一点说明</strong><br>你可能已经注意到，之前存入数据库的事常规的Python字符串，这与我们从数据库服务器里取回来的看起来不同（比如 u’Mike’ 而不是‘Mike’）。 <a id="more"></a> 下面简单解释一下。 </p>
-<p>MongoDB 以格式保存数据. BSON 字符串都是 UTF-8编码的， 所以PyMongo必须确保它保存的字符串值包含有效地 UTF-8数据.常规字符串 ( )都是有效的，可以不改变直接保存。Unicode 字符串( )就需要先编码成 UTF-8 格式.例子里的字符串显示为u’Mike’ 而不是 ‘Mike’是因为 PyMongo 会把每个BSON 字符串转换成 Python 的unicode 字符串, 而不是常规的 str.</p>
-<p><strong>这个问题困扰了我好多天，其实并不用太担心，因为在python处理过程中它会依然正常处理</strong></p>
-<p><strong>Mongodb查询返回值</strong><br>如果用find({})函数查询，则返回的是一个游标并不是字典，类似于list若要查看其中内容需用for循环遍历</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">p = StockDB.get_collection(<span class="string">'SHistA'</span>).find(&#123;&#125;,&#123;ticker:<span class="number">1</span>,<span class="string">"_id"</span>:<span class="number">0</span>&#125;)</div><div class="line"><span class="keyword">for</span> doc <span class="keyword">in</span> p:</div><div class="line"> ...</div></pre></td></tr></table></figure>
-<p>用find_one({})返回的则是字典</p>
-]]></content>
-      
-        <categories>
-            
-            <category> Mongodb </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> python </tag>
-            
-            <tag> mongodb </tag>
-            
-            <tag> pymongo </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[决策树]]></title>
-      <url>/2017/11/07/%E5%86%B3%E7%AD%96%E6%A0%91/</url>
-      <content type="html"><![CDATA[<h1 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h1><p>决策树以数据特征做划分，利用特征鲜明且完备的方式将数据划入不同的分类。是一种数值离散的聚类算法。  其中最主要的两个知识点是<strong>信息熵</strong>和<strong>信息增益</strong>。决策树根据所给数据特征的信息增益决定划分方式。  <a id="more"></a> </p>
-<h2 id="特征选择"><a href="#特征选择" class="headerlink" title="特征选择"></a>特征选择</h2><p>选取对训练数据具有分类功能的特征  <strong>信息熵</strong>  在信息论和概率统计中对随记变量不确定性的度量  设X是一个取有限个值的离散随机变量，其概率分布：  </p>
-<p>$$<br>P(X = x_i)=p_i, i = 1,2,···n<br>$$</p>
-<p>则X的熵定义为：$H(X) =- \sum_{i=1}^{n}p_ilog(p_i)$log以2为底单位为比特（bit）  上式表明熵越大X的不确定度越大  若有二维随机变量(X,Y），其联合概率为：<br>$$<br>P(X = x_i,Y = y<em>j) = p</em>{ij} ， i = 1,2,3······n,j= 1,2,3······m<br>$$<br>  <strong>条件熵H(Y|X)</strong><br>表示在已知随机变量X的条件下随机变量Y的不确定度。<br>$$<br>H(Y|X) = \sum_{i = 1}^{n}p_iH(Y|X=x_i)<br>$$</p>
-<p>$$<br>p_i = P(X = x_i),i = 1,2,3······n<br>$$<br> 在得到一批数据后可以通过数据估计，所得熵与条件熵称经验熵和经验条件熵<br><strong>信息增益</strong><br>表示在得知特征X的条件下，而使得Y的信息不确定性减少的程度。  特征 X对训练数据集Y的信息增益g(Y,X)，定义为集合Y的经验熵H(Y)与特征 X给定条件下Y的经验条件熵H(Y|X)之差<br>$$<br>g(Y,X) = H(Y) - H(Y|X)<br>$$<br> 因此对给定数据集和特征，信息增益越大的特征具有更强的分类能力  所以特征选择的方法：<strong>对数据集，计算其每个特征的信息增益，并比较它们的大小，选择信息增益最大的特征，并迭代进行</strong></p>
-<h3 id="计算信息熵（香农熵）"><a href="#计算信息熵（香农熵）" class="headerlink" title="计算信息熵（香农熵）"></a>计算信息熵（香农熵）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 计算信息熵 </span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">CalcShannonEnt</span><span class="params">(dataSet)</span> :</span> <span class="comment"># 计算数据集的输入个数 </span></div><div class="line">numEntries=len(dataSet) <span class="comment"># []列表,&#123;&#125;元字典,()元组 </span></div><div class="line">labelCounts= &#123;&#125; <span class="comment"># 创建存储标签的元字典 </span></div><div class="line"></div><div class="line"><span class="comment"># 对数据集dataSet中的每一行featVec进行循环遍历 </span></div><div class="line"><span class="keyword">for</span> featVec <span class="keyword">in</span> dataSet : </div><div class="line">	currentLabels=featVec[<span class="number">-1</span>] <span class="comment"># currentLabels为featVec的最后一个元素 </span></div><div class="line"><span class="keyword">if</span> currentLabels <span class="keyword">not</span> <span class="keyword">in</span> labelCounts.keys() : <span class="comment"># 如果标签currentLabels不在元字典对应的key中</span></div><div class="line">	labelCounts[currentLabels]=<span class="number">0</span> <span class="comment"># 将标签currentLabels放到字典中作为key，并将值赋为0</span></div><div class="line">	labelCounts[currentLabels]+=<span class="number">1</span> <span class="comment"># 将currentLabels对应的值加1 </span></div><div class="line">shannonEnt=<span class="number">0.0</span> <span class="comment"># 定义香农熵shannonEnt </span></div><div class="line"><span class="keyword">for</span> key <span class="keyword">in</span> labelCounts : <span class="comment"># 遍历元字典labelCounts中的key，即标签		   </span></div><div class="line">	prob=float(labelCounts[key]) / numEntries <span class="comment"># 计算每一个标签出现的频率，即概率</span></div><div class="line">	shannonEnt -=prob * log(prob, <span class="number">2</span>)<span class="comment"># 根据信息熵公式计算每个标签信息熵并累加到shannonEnt上</span></div><div class="line"><span class="keyword">return</span> shannonEnt<span class="comment"># 返回求得的整个标签对应的信息熵</span></div></pre></td></tr></table></figure>
-<h3 id="计算条件熵选择最好的分类特征"><a href="#计算条件熵选择最好的分类特征" class="headerlink" title="计算条件熵选择最好的分类特征"></a>计算条件熵选择最好的分类特征</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">chooseBestFeatureToSplit</span><span class="params">(dataSet)</span>:</span> <span class="comment"># 选择使分割后信息增益最大的特征，即对应的列 </span></div><div class="line">	numFeatures=len(dataSet[<span class="number">0</span>]) - <span class="number">1</span> <span class="comment"># 获取特征的数目，从0开始，dataSet[0]是一条数据 </span></div><div class="line">	baseEntropy=CalcShannonEnt(dataSet) <span class="comment"># 计算数据集当前的信息熵 </span></div><div class="line">	bestInfoGain=<span class="number">0.0</span> <span class="comment"># 定义最大的信息增益 </span></div><div class="line">	bestFeature=<span class="number">-1</span> <span class="comment"># 定义分割后信息增益最大的特征 </span></div><div class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(numFeatures):<span class="comment"># 遍历特征，即所有的列，计算每一列分割后的信息增益，找出信息增益最大的列 </span></div><div class="line">		featList=[example[i] <span class="keyword">for</span> example <span class="keyword">in</span> dataSet] <span class="comment"># 取出第i列特征赋给featList </span></div><div class="line">		uniqueVals=set(featList) <span class="comment"># 将特征对应的值放到一个集合中，使得特征列的数据具有唯一性 </span></div><div class="line">		newEntropy=<span class="number">0.0</span> <span class="comment"># 定义分割后的信息熵 </span></div><div class="line">		<span class="keyword">for</span> value <span class="keyword">in</span> uniqueVals: <span class="comment"># 遍历特征列的所有值(值是唯一的，重复值已经合并)，分割并计算信息增益 </span></div><div class="line">			subDataSet=splitDataSet(dataSet,i, value) <span class="comment"># 按照特征列的每个值进行数据集分割 	</span></div><div class="line">			prob=len(subDataSet) / float(len(dataSet)) <span class="comment"># 计算分割后的每个子集的概率(频率) </span></div><div class="line">			newEntropy+=prob * CalcShannonEnt(subDataSet) <span class="comment"># 计算分割后的子集的信息熵并相加，得到分割后的整个数据集的信息熵 </span></div><div class="line">		infoGain=baseEntropy - newEntropy <span class="comment"># 计算分割后的信息增益 </span></div><div class="line">		<span class="keyword">if</span> (infoGain &gt; bestInfoGain): <span class="comment">#如果分割后信息增益大于最好的信息增益 </span></div><div class="line">			bestInfoGain=infoGain <span class="comment"># 将当前的分割的信息增益赋值为最好信息增益 </span></div><div class="line">			bestFeature=i <span class="comment"># 分割的最好特征列赋为i </span></div><div class="line">	<span class="keyword">return</span> bestFeature <span class="comment"># 返回分割后信息增益最大的特征列</span></div></pre></td></tr></table></figure>
-]]></content>
-      
-        <categories>
-            
-            <category> Machine Learning </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> python </tag>
-            
-            <tag> machine learning </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[MongoDB 学习笔记（一）]]></title>
-      <url>/2017/11/07/MongoDB%20%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/</url>
-      <content type="html"><![CDATA[<h1 id="MongoDB-学习笔记（一）"><a href="#MongoDB-学习笔记（一）" class="headerlink" title="MongoDB 学习笔记（一）"></a>MongoDB 学习笔记（一）</h1><p>mongodb是一种非结构化存储数据库，它的数据是以文档为基础的在本地以二进制形式进行存储（Bosn），虽然有与sql查询语句相似的方式，但与SQL语法没有任何关系，更像是一种面相对象的编程，调用函数接口。<br> <a id="more"></a><br><strong>启动方式：</strong> </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># apple @ admin [12:05:48] $ mongodb //启动一个mongodb服务器（默认端口在27017）,默认启动连接数据库为 ／data/db 若想指定数据库，需添加参数--dbpath </span></div><div class="line">例：  </div><div class="line"><span class="comment"># apple @ admin [12:05:48] $ mongod --dbpath ~/workspace/stock/mongodb/data/db  </span></div><div class="line"><span class="comment"># apple @ admin [12:05:48] $ mongo //启动一个命令行交互程序，是mongodbd的一个进程</span></div></pre></td></tr></table></figure>
-<p>我在使用mongodb是主要用python编程进行数据录入和处理，因此使用mongodb提供的<strong>pymongo</strong>包在程序中连接数据库进行操作<br> <strong>连接数据库：</strong> </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> pymongo <span class="keyword">import</span> MongoClient </div><div class="line">client=MongoClient() //创建一个服务器进程，默认自动创建端口  </div><div class="line">db = client[<span class="string">'STOCK'</span>] //连接到数据库STOCK</div></pre></td></tr></table></figure>
-<h2 id="常用数据库操作"><a href="#常用数据库操作" class="headerlink" title="常用数据库操作"></a>常用数据库操作</h2><p><strong>增：</strong><br>函数名：insert_one() 作用：用于插入一个文档  使用格式：db.get_collection(‘CollectionName’).insert_one({‘key’:’value’}) 函数名：insert_many() 作用：用于插入多个文档  使用格式：db.get_collection(‘CollectionName’).insert_many([  {‘key’: i }  ]for i in range(n)) </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Acoll=db[<span class="string">'SEquA'</span>] </div><div class="line">Aresult=Acoll.insert_many( [ &#123;</div><div class="line">    <span class="string">"ticker"</span>: SA[<span class="string">'ticker'</span>][i], <span class="string">"secShortName"</span>: SA[<span class="string">'secShortName'</span>][i]</div><div class="line">&#125;</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(SA))])</div></pre></td></tr></table></figure>
-<p> <strong>查：</strong><br>函数名：find() 作用：查找所需要的文档  使用格式：db.get_collection(‘CollectionName’).find({‘key’:’value’})  其他使用方式查看：<a href="http://api.mongodb.com/python/current/api/pymongo/collection.html?_ga=1.224606170.1159885722.1489465777#pymongo.collection.Collection.find" target="_blank" rel="external">http://api.mongodb.com/python/current/api/pymongo/collection.html?_ga=1.224606170.1159885722.1489465777#pymongo.collection.Collection.find</a> </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ATicker=db.get_collection(<span class="string">'SEquA'</span>).find( &#123;&#125;</div><div class="line"></div><div class="line">, &#123;</div><div class="line">    <span class="string">'ticker'</span>: <span class="number">1</span>, <span class="string">'_id'</span>:<span class="number">0</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">)</div></pre></td></tr></table></figure>
-<p><strong>注意：find()函数查找所返回的格式是dict,关于dict对象的操作方式自行查找</strong><br><strong>改：</strong><br>函数名：update() 作用：对指定文档进行更新和添加  使用格式：db.get_collection(‘CollectionName’).update({filter},{operation},  otherparameter…) </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">db.get_collection(<span class="string">"SConC"</span>).update( &#123;</div><div class="line">    <span class="string">"c_name"</span>: SConC[<span class="string">'c_name'</span>][i]</div><div class="line">&#125;</div><div class="line"></div><div class="line">, &#123;</div><div class="line">    <span class="string">"$set"</span>: &#123;</div><div class="line">        SConC[<span class="string">'code'</span>][i]: &#123;</div><div class="line">            <span class="string">"name"</span>: SConC[<span class="string">'name'</span>][i]</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">, upsert=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
-]]></content>
-      
-        <categories>
-            
-            <category> Machine Learning </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> python </tag>
-            
-            <tag> mongodb </tag>
-            
-            <tag> pymongo </tag>
-            
-        </tags>
-        
-    </entry>
-    
-  
-  
+<search>
+  <entry>
+    <title><![CDATA[Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN]]></title>
+    <url>%2F2017%2F11%2F08%2FPytorch%E5%AE%98%E6%96%B9%E6%95%99%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%BF%BB%E8%AF%91_ClassifyingNames_Charter-Level_RNN%2F</url>
+    <content type="text"><![CDATA[Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN 我们将建立并训练一个基于caharacter-level RNN（个人理解：字符级的RNN模型）来分类单词，该模型将单词当做一串字母读入，在每一轮训练中输出预测结果和隐藏状态，将其以前的隐藏状态提供给下一步。我们将单词属于哪种语言作为最后的预测结果当做输出。 训练数据集采用来自18种语言的姓氏大概有1000多条。预测结果基于名字的拼写方式得出。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778# coding=utf-8from __future__ import unicode_literals,print_function,divisionfrom io import openimport globimport torchimport unicodedataimport string'''准备数据: 在数据集data/names目录下有18个TXT文件被命名为"[language].txt"，每个文件包含一串名字，每行一个 大多数名字都是罗马字符（但我们仍需要将Unicode转为ASCII码） 我们最终要得到一个将每种语言与其名字相对应的字典列表形式&#123;language:[names...]&#125; 变量 category 和 line （在例子中对应language和name)为以后方便扩展被使用'''def findFiles(path):return glob.glob(path)print(findFiles('data/names/*.txt'))all_letters = string.ascii_letters + " .,;'"n_letters = len(all_letters)#将Unicode转为ASCII码def unicodeToAscii(s): return ''.join( c for c in unicodedata.normalize('NFD',s) if unicodedata.category(c) != 'Mn' and c in all_letters )print(unicodeToAscii('Ślusàrski'))#建立category-line字典，每种语言与其名字相对应的字典列表形式&#123;language:[names...]&#125;category_lines = &#123;&#125;all_categories = []#读取文件进行行分割def readLines(filename): lines = open(filename,encoding='utf-8').read().strip().split('\n') return [unicodeToAscii(line) for line in lines]for filename in findFiles('data/names/*.txt'): category = filename.split('/')[-1].split('.')[0] all_categories.append(category) lines = readLines(filename) category_lines[category] = linesn_categories = len(all_categories)'''将名字转为Tensor: 我们需要将已经组织好的名字转为Tensor变量使得GPU和pytorch可以使用 '''def letterToIndex(letter): return all_letters.find((letter))def letterToTensor(letter): tensor = torch.zeros(1,n_letters) tensor[0][letterToIndex(letter)] = 1 return tensordef lineToTensor(line): tensor = torch.zeros(len(line),1,n_letters) for li,letter in enumerate(line): tensor[li][0][letterToIndex(letter)] = 1 return tensorprint (letterToIndex('J'))print (lineToTensor('Jones').size())]]></content>
+      <categories>
+        <category>pytorch</category>
+      </categories>
+      <tags>
+        <tag>pytorch</tag>
+        <tag>DeepLearning</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[test_image]]></title>
+    <url>%2F2017%2F11%2F07%2Ftest_image%2F</url>
+    <content type="text"><![CDATA[test_image]]></content>
+      <categories>
+        <category>生活</category>
+      </categories>
+      <tags>
+        <tag>随记</tag>
+        <tag>生活</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Mongodb学习笔记（二）]]></title>
+    <url>%2F2017%2F11%2F07%2FMongodb%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%2F</url>
+    <content type="text"><![CDATA[Mongodb学习笔记（二） 关于Unicode字符串的一点说明你可能已经注意到，之前存入数据库的事常规的Python字符串，这与我们从数据库服务器里取回来的看起来不同（比如 u’Mike’ 而不是‘Mike’）。 下面简单解释一下。 MongoDB 以格式保存数据. BSON 字符串都是 UTF-8编码的， 所以PyMongo必须确保它保存的字符串值包含有效地 UTF-8数据.常规字符串 ( )都是有效的，可以不改变直接保存。Unicode 字符串( )就需要先编码成 UTF-8 格式.例子里的字符串显示为u’Mike’ 而不是 ‘Mike’是因为 PyMongo 会把每个BSON 字符串转换成 Python 的unicode 字符串, 而不是常规的 str. 这个问题困扰了我好多天，其实并不用太担心，因为在python处理过程中它会依然正常处理 Mongodb查询返回值如果用find({})函数查询，则返回的是一个游标并不是字典，类似于list若要查看其中内容需用for循环遍历 123p = StockDB.get_collection('SHistA').find(&#123;&#125;,&#123;ticker:1,"_id":0&#125;)for doc in p: ... 用find_one({})返回的则是字典]]></content>
+      <categories>
+        <category>Mongodb</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>mongodb</tag>
+        <tag>pymongo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[决策树]]></title>
+    <url>%2F2017%2F11%2F07%2F%E5%86%B3%E7%AD%96%E6%A0%91%2F</url>
+    <content type="text"><![CDATA[决策树决策树以数据特征做划分，利用特征鲜明且完备的方式将数据划入不同的分类。是一种数值离散的聚类算法。 其中最主要的两个知识点是信息熵和信息增益。决策树根据所给数据特征的信息增益决定划分方式。 特征选择选取对训练数据具有分类功能的特征 信息熵 在信息论和概率统计中对随记变量不确定性的度量 设X是一个取有限个值的离散随机变量，其概率分布： $$P(X = x_i)=p_i, i = 1,2,···n$$ 则X的熵定义为：$H(X) =- \sum_{i=1}^{n}p_ilog(p_i)$log以2为底单位为比特（bit） 上式表明熵越大X的不确定度越大 若有二维随机变量(X,Y），其联合概率为：$$P(X = x_i,Y = yj) = p{ij} ， i = 1,2,3······n,j= 1,2,3······m$$ 条件熵H(Y|X)表示在已知随机变量X的条件下随机变量Y的不确定度。$$H(Y|X) = \sum_{i = 1}^{n}p_iH(Y|X=x_i)$$ $$p_i = P(X = x_i),i = 1,2,3······n$$ 在得到一批数据后可以通过数据估计，所得熵与条件熵称经验熵和经验条件熵信息增益表示在得知特征X的条件下，而使得Y的信息不确定性减少的程度。 特征 X对训练数据集Y的信息增益g(Y,X)，定义为集合Y的经验熵H(Y)与特征 X给定条件下Y的经验条件熵H(Y|X)之差$$g(Y,X) = H(Y) - H(Y|X)$$ 因此对给定数据集和特征，信息增益越大的特征具有更强的分类能力 所以特征选择的方法：对数据集，计算其每个特征的信息增益，并比较它们的大小，选择信息增益最大的特征，并迭代进行 计算信息熵（香农熵）12345678910111213141516# 计算信息熵 def CalcShannonEnt(dataSet) : # 计算数据集的输入个数 numEntries=len(dataSet) # []列表,&#123;&#125;元字典,()元组 labelCounts= &#123;&#125; # 创建存储标签的元字典 # 对数据集dataSet中的每一行featVec进行循环遍历 for featVec in dataSet : currentLabels=featVec[-1] # currentLabels为featVec的最后一个元素 if currentLabels not in labelCounts.keys() : # 如果标签currentLabels不在元字典对应的key中 labelCounts[currentLabels]=0 # 将标签currentLabels放到字典中作为key，并将值赋为0 labelCounts[currentLabels]+=1 # 将currentLabels对应的值加1 shannonEnt=0.0 # 定义香农熵shannonEnt for key in labelCounts : # 遍历元字典labelCounts中的key，即标签 prob=float(labelCounts[key]) / numEntries # 计算每一个标签出现的频率，即概率 shannonEnt -=prob * log(prob, 2)# 根据信息熵公式计算每个标签信息熵并累加到shannonEnt上return shannonEnt# 返回求得的整个标签对应的信息熵 计算条件熵选择最好的分类特征123456789101112131415161718def chooseBestFeatureToSplit(dataSet): # 选择使分割后信息增益最大的特征，即对应的列 numFeatures=len(dataSet[0]) - 1 # 获取特征的数目，从0开始，dataSet[0]是一条数据 baseEntropy=CalcShannonEnt(dataSet) # 计算数据集当前的信息熵 bestInfoGain=0.0 # 定义最大的信息增益 bestFeature=-1 # 定义分割后信息增益最大的特征 for i in range(numFeatures):# 遍历特征，即所有的列，计算每一列分割后的信息增益，找出信息增益最大的列 featList=[example[i] for example in dataSet] # 取出第i列特征赋给featList uniqueVals=set(featList) # 将特征对应的值放到一个集合中，使得特征列的数据具有唯一性 newEntropy=0.0 # 定义分割后的信息熵 for value in uniqueVals: # 遍历特征列的所有值(值是唯一的，重复值已经合并)，分割并计算信息增益 subDataSet=splitDataSet(dataSet,i, value) # 按照特征列的每个值进行数据集分割 prob=len(subDataSet) / float(len(dataSet)) # 计算分割后的每个子集的概率(频率) newEntropy+=prob * CalcShannonEnt(subDataSet) # 计算分割后的子集的信息熵并相加，得到分割后的整个数据集的信息熵 infoGain=baseEntropy - newEntropy # 计算分割后的信息增益 if (infoGain &gt; bestInfoGain): #如果分割后信息增益大于最好的信息增益 bestInfoGain=infoGain # 将当前的分割的信息增益赋值为最好信息增益 bestFeature=i # 分割的最好特征列赋为i return bestFeature # 返回分割后信息增益最大的特征列]]></content>
+      <categories>
+        <category>Machine Learning</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>machine learning</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[MongoDB 学习笔记（一）]]></title>
+    <url>%2F2017%2F11%2F07%2FMongoDB%20%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%2F</url>
+    <content type="text"><![CDATA[MongoDB 学习笔记（一）mongodb是一种非结构化存储数据库，它的数据是以文档为基础的在本地以二进制形式进行存储（Bosn），虽然有与sql查询语句相似的方式，但与SQL语法没有任何关系，更像是一种面相对象的编程，调用函数接口。 启动方式： 1234# apple @ admin [12:05:48] $ mongodb //启动一个mongodb服务器（默认端口在27017）,默认启动连接数据库为 ／data/db 若想指定数据库，需添加参数--dbpath 例： # apple @ admin [12:05:48] $ mongod --dbpath ~/workspace/stock/mongodb/data/db # apple @ admin [12:05:48] $ mongo //启动一个命令行交互程序，是mongodbd的一个进程 我在使用mongodb是主要用python编程进行数据录入和处理，因此使用mongodb提供的pymongo包在程序中连接数据库进行操作 连接数据库： 123from pymongo import MongoClient client=MongoClient() //创建一个服务器进程，默认自动创建端口 db = client['STOCK'] //连接到数据库STOCK 常用数据库操作增：函数名：insert_one() 作用：用于插入一个文档 使用格式：db.get_collection(‘CollectionName’).insert_one({‘key’:’value’}) 函数名：insert_many() 作用：用于插入多个文档 使用格式：db.get_collection(‘CollectionName’).insert_many([ {‘key’: i } ]for i in range(n)) 12345Acoll=db['SEquA'] Aresult=Acoll.insert_many( [ &#123; "ticker": SA['ticker'][i], "secShortName": SA['secShortName'][i]&#125;for i in range(len(SA))]) 查：函数名：find() 作用：查找所需要的文档 使用格式：db.get_collection(‘CollectionName’).find({‘key’:’value’}) 其他使用方式查看：http://api.mongodb.com/python/current/api/pymongo/collection.html?_ga=1.224606170.1159885722.1489465777#pymongo.collection.Collection.find 1234567ATicker=db.get_collection('SEquA').find( &#123;&#125;, &#123; 'ticker': 1, '_id':0&#125;) 注意：find()函数查找所返回的格式是dict,关于dict对象的操作方式自行查找改：函数名：update() 作用：对指定文档进行更新和添加 使用格式：db.get_collection(‘CollectionName’).update({filter},{operation}, otherparameter…) 12345678910111213db.get_collection("SConC").update( &#123; "c_name": SConC['c_name'][i]&#125;, &#123; "$set": &#123; SConC['code'][i]: &#123; "name": SConC['name'][i] &#125; &#125;&#125;, upsert=True)]]></content>
+      <categories>
+        <category>Machine Learning</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>mongodb</tag>
+        <tag>pymongo</tag>
+      </tags>
+  </entry>
 </search>
