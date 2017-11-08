@@ -3,6 +3,28 @@
 
 
     
+  <url>
+    <loc>http://yoursite.com/2017/11/08/2017-11-08-untitled/</loc>
+    <lastmod>2017-11-08T07:26:24.000Z</lastmod>
+    <data>
+        <display>
+        <title>TensorFlow学习(一)</title>
+        <pubTime>2017-11-08T07:25:08.000Z</pubTime>
+        
+        <tag>tensorflow</tag>
+         
+        <tag>DeepLearning</tag>
+         
+         
+           
+             
+              <breadCrumb title="TensorFlow" url="http://yoursite.com/categories/TensorFlow/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
     
   <url>
     <loc>http://yoursite.com/2017/11/08/Pytorch%E5%AE%98%E6%96%B9%E6%95%99%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%BF%BB%E8%AF%91_ClassifyingNames_Charter-Level_RNN/</loc>
@@ -12,9 +34,9 @@
         <title>Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN</title>
         <pubTime>2017-11-08T02:19:36.000Z</pubTime>
         
-        <tag>pytorch</tag>
-         
         <tag>DeepLearning</tag>
+         
+        <tag>pytorch</tag>
          
          
            
