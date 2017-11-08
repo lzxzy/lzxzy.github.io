@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="python,mongodb" />
+  <meta name="keywords" content="学习，pytoch,rnn" />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Mongodb学习笔记（二） 关于Unicode字符串的一点说明你可能已经注意到，之前存入数据库的事常规的Python字符串，这与我们从数据库服务器里取回来的看起来不同（比如 u’Mike’ 而不是‘Mike’）。">
-<meta name="keywords" content="python,mongodb">
+<meta name="description" content="Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778# c">
+<meta name="keywords" content="学习，pytoch,rnn">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mongodb学习笔记（二）">
-<meta property="og:url" content="http://yoursite.com/2017/11/07/Mongodb学习笔记（二）/index.html">
+<meta property="og:title" content="Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN">
+<meta property="og:url" content="http://yoursite.com/2017/11/08/Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN/index.html">
 <meta property="og:site_name" content="叶言">
-<meta property="og:description" content="Mongodb学习笔记（二） 关于Unicode字符串的一点说明你可能已经注意到，之前存入数据库的事常规的Python字符串，这与我们从数据库服务器里取回来的看起来不同（比如 u’Mike’ 而不是‘Mike’）。">
+<meta property="og:description" content="Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778# c">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-07T06:08:36.000Z">
+<meta property="og:updated_time" content="2017-11-08T02:23:51.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mongodb学习笔记（二）">
-<meta name="twitter:description" content="Mongodb学习笔记（二） 关于Unicode字符串的一点说明你可能已经注意到，之前存入数据库的事常规的Python字符串，这与我们从数据库服务器里取回来的看起来不同（比如 u’Mike’ 而不是‘Mike’）。">
+<meta name="twitter:title" content="Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN">
+<meta name="twitter:description" content="Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778# c">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/07/Mongodb学习笔记（二）/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/08/Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN/"/>
 
 
 
 
 
-  <title>Mongodb学习笔记（二） | 叶言</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN | 叶言</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -297,7 +297,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/07/Mongodb学习笔记（二）/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/08/Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Liu Zongxuan">
@@ -314,7 +314,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Mongodb学习笔记（二）</h1>
+          <h1 class="post-title" itemprop="name headline">Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN</h1>
         
 
         <div class="post-meta">
@@ -326,8 +326,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-07T05:34:33+08:00">
-                2017-11-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-08T10:19:36+08:00">
+                2017-11-08
               </time>
             
 
@@ -349,8 +349,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Mongodb/" itemprop="url" rel="index">
-                    <span itemprop="name">Mongodb</span>
+                  <a href="/categories/pytorch/" itemprop="url" rel="index">
+                    <span itemprop="name">pytorch</span>
                   </a>
                 </span>
 
@@ -386,13 +386,7 @@
       
 
       
-        <h1 id="Mongodb学习笔记（二）"><a href="#Mongodb学习笔记（二）" class="headerlink" title="Mongodb学习笔记（二）"></a>Mongodb学习笔记（二）</h1><hr>
-<p><strong>关于Unicode字符串的一点说明</strong><br>你可能已经注意到，之前存入数据库的事常规的Python字符串，这与我们从数据库服务器里取回来的看起来不同（比如 u’Mike’ 而不是‘Mike’）。 <a id="more"></a> 下面简单解释一下。 </p>
-<p>MongoDB 以格式保存数据. BSON 字符串都是 UTF-8编码的， 所以PyMongo必须确保它保存的字符串值包含有效地 UTF-8数据.常规字符串 ( )都是有效的，可以不改变直接保存。Unicode 字符串( )就需要先编码成 UTF-8 格式.例子里的字符串显示为u’Mike’ 而不是 ‘Mike’是因为 PyMongo 会把每个BSON 字符串转换成 Python 的unicode 字符串, 而不是常规的 str.</p>
-<p><strong>这个问题困扰了我好多天，其实并不用太担心，因为在python处理过程中它会依然正常处理</strong></p>
-<p><strong>Mongodb查询返回值</strong><br>如果用find({})函数查询，则返回的是一个游标并不是字典，类似于list若要查看其中内容需用for循环遍历</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">p = StockDB.get_collection(<span class="string">'SHistA'</span>).find(&#123;&#125;,&#123;ticker:<span class="number">1</span>,<span class="string">"_id"</span>:<span class="number">0</span>&#125;)</div><div class="line"><span class="keyword">for</span> doc <span class="keyword">in</span> p:</div><div class="line"> ...</div></pre></td></tr></table></figure>
-<p>用find_one({})返回的则是字典</p>
+        <h1 id="Pytorch官方教程代码翻译-ClassifyingNames-Charter-Level-RNN"><a href="#Pytorch官方教程代码翻译-ClassifyingNames-Charter-Level-RNN" class="headerlink" title="Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN"></a>Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># coding=utf-8</span></div><div class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> unicode_literals,print_function,division</div><div class="line"><span class="keyword">from</span> io <span class="keyword">import</span> open</div><div class="line"><span class="keyword">import</span> glob</div><div class="line"><span class="keyword">import</span> torch</div><div class="line"><span class="keyword">import</span> unicodedata</div><div class="line"><span class="keyword">import</span> string</div><div class="line"></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line"><span class="string">准备数据:</span></div><div class="line"><span class="string">    在数据集data/names目录下有18个TXT文件被命名为"[language].txt"，每个文件包含一串名字，每行一个</span></div><div class="line"><span class="string">    大多数名字都是罗马字符（但我们仍需要将Unicode转为ASCII码）</span></div><div class="line"><span class="string">    </span></div><div class="line"><span class="string">    我们最终要得到一个将每种语言与其名字相对应的字典列表形式&#123;language:[names...]&#125;</span></div><div class="line"><span class="string">    变量 category 和 line （在例子中对应language和name)为以后方便扩展被使用</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">'''</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">findFiles</span><span class="params">(path)</span>:</span><span class="keyword">return</span> glob.glob(path)</div><div class="line"></div><div class="line">print(findFiles(<span class="string">'data/names/*.txt'</span>))</div><div class="line"></div><div class="line"></div><div class="line">all_letters = string.ascii_letters + <span class="string">" .,;'"</span></div><div class="line">n_letters = len(all_letters)</div><div class="line"></div><div class="line"><span class="comment">#将Unicode转为ASCII码</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">unicodeToAscii</span><span class="params">(s)</span>:</span></div><div class="line">    <span class="keyword">return</span> <span class="string">''</span>.join(</div><div class="line">        c <span class="keyword">for</span> c <span class="keyword">in</span> unicodedata.normalize(<span class="string">'NFD'</span>,s)</div><div class="line">        <span class="keyword">if</span> unicodedata.category(c) != <span class="string">'Mn'</span></div><div class="line">        <span class="keyword">and</span> c <span class="keyword">in</span> all_letters</div><div class="line">    )</div><div class="line"></div><div class="line">print(unicodeToAscii(<span class="string">'Ślusàrski'</span>))</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">#建立category-line字典，每种语言与其名字相对应的字典列表形式&#123;language:[names...]&#125;</span></div><div class="line">category_lines = &#123;&#125;</div><div class="line">all_categories = []</div><div class="line"></div><div class="line"><span class="comment">#读取文件进行行分割</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">readLines</span><span class="params">(filename)</span>:</span></div><div class="line">    lines = open(filename,encoding=<span class="string">'utf-8'</span>).read().strip().split(<span class="string">'\n'</span>)</div><div class="line">    <span class="keyword">return</span> [unicodeToAscii(line) <span class="keyword">for</span> line <span class="keyword">in</span> lines]</div><div class="line"></div><div class="line"><span class="keyword">for</span> filename <span class="keyword">in</span> findFiles(<span class="string">'data/names/*.txt'</span>):</div><div class="line">    category = filename.split(<span class="string">'/'</span>)[<span class="number">-1</span>].split(<span class="string">'.'</span>)[<span class="number">0</span>]</div><div class="line">    all_categories.append(category)</div><div class="line">    lines = readLines(filename)</div><div class="line">    category_lines[category] = lines</div><div class="line"></div><div class="line">n_categories = len(all_categories)</div><div class="line"></div><div class="line"></div><div class="line"><span class="string">'''</span></div><div class="line"><span class="string">将名字转为Tensor:</span></div><div class="line"><span class="string">    我们需要将已经组织好的名字转为Tensor变量使得GPU和pytorch可以使用</span></div><div class="line"><span class="string">    </span></div><div class="line"><span class="string">'''</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">letterToIndex</span><span class="params">(letter)</span>:</span></div><div class="line">    <span class="keyword">return</span> all_letters.find((letter))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">letterToTensor</span><span class="params">(letter)</span>:</span></div><div class="line">    tensor = torch.zeros(<span class="number">1</span>,n_letters)</div><div class="line">    tensor[<span class="number">0</span>][letterToIndex(letter)] = <span class="number">1</span></div><div class="line">    <span class="keyword">return</span> tensor</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">lineToTensor</span><span class="params">(line)</span>:</span></div><div class="line">    tensor = torch.zeros(len(line),<span class="number">1</span>,n_letters)</div><div class="line">    <span class="keyword">for</span> li,letter <span class="keyword">in</span> enumerate(line):</div><div class="line">        tensor[li][<span class="number">0</span>][letterToIndex(letter)] = <span class="number">1</span></div><div class="line">    <span class="keyword">return</span> tensor</div><div class="line"></div><div class="line"><span class="keyword">print</span> (letterToIndex(<span class="string">'J'</span>))</div><div class="line"><span class="keyword">print</span> (lineToTensor(<span class="string">'Jones'</span>).size())</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -439,11 +433,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/python/" rel="tag"># python</a>
+            <a href="/tags/pytorch/" rel="tag"># pytorch</a>
           
-            <a href="/tags/mongodb/" rel="tag"># mongodb</a>
-          
-            <a href="/tags/pymongo/" rel="tag"># pymongo</a>
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
           
         </div>
       
@@ -456,8 +448,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/07/决策树/" rel="next" title="决策树">
-                <i class="fa fa-chevron-left"></i> 决策树
+              <a href="/2017/11/07/test_image/" rel="next" title="test_image">
+                <i class="fa fa-chevron-left"></i> test_image
               </a>
             
           </div>
@@ -465,10 +457,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/07/test_image/" rel="prev" title="test_image">
-                test_image <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -625,7 +613,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Mongodb学习笔记（二）"><span class="nav-number">1.</span> <span class="nav-text">Mongodb学习笔记（二）</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Pytorch官方教程代码翻译-ClassifyingNames-Charter-Level-RNN"><span class="nav-number">1.</span> <span class="nav-text">Pytorch官方教程代码翻译_ClassifyingNames_Charter-Level_RNN</span></a></li></ol></div>
             
 
           </div>
