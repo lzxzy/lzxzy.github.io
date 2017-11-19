@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/11/19/%E8%AE%BA%E6%96%87%E7%BF%BB%E8%AF%91_%E9%80%9A%E8%BF%87Wikipedia%E5%9B%9E%E7%AD%94%E5%BC%80%E6%94%BE%E5%9F%9F%E9%97%AE%E9%A2%98/</loc>
+    
+    <lastmod>2017-11-19T15:42:28.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/11/08/Pytorch%E5%AE%98%E6%96%B9%E6%95%99%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%BF%BB%E8%AF%91_ClassifyingNames_Charter-Level_RNN/</loc>
+    
+    <lastmod>2017-11-13T08:35:51.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/11/08/TensorFlow%E5%AD%A6%E4%B9%A0(%E4%BA%8C)/</loc>
     
     <lastmod>2017-11-08T07:35:27.000Z</lastmod>
@@ -26,13 +40,6 @@
     <loc>http://yoursite.com/about/index.html</loc>
     
     <lastmod>2017-11-08T06:32:15.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2017/11/08/Pytorch%E5%AE%98%E6%96%B9%E6%95%99%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%BF%BB%E8%AF%91_ClassifyingNames_Charter-Level_RNN/</loc>
-    
-    <lastmod>2017-11-08T06:29:51.000Z</lastmod>
     
   </url>
   
