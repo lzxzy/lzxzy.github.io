@@ -88,7 +88,7 @@
 <meta property="og:description" content="通过Wikipedia（维基百科）回答开放域问题Danqi Chen∗Computer Science Stanford University Stanford, CA 94305, USA danqi@cs.stanford.edu Adam Fisch, Jason Weston &amp;amp; Antoine Bordes Facebook AI Research 770 Broadway Ne">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://oz2l9lnu9.bkt.clouddn.com/DrQA.png">
-<meta property="og:updated_time" content="2017-11-19T15:42:28.000Z">
+<meta property="og:updated_time" content="2017-11-19T16:12:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="论文翻译_通过Wikipedia回答开放域问题">
 <meta name="twitter:description" content="通过Wikipedia（维基百科）回答开放域问题Danqi Chen∗Computer Science Stanford University Stanford, CA 94305, USA danqi@cs.stanford.edu Adam Fisch, Jason Weston &amp;amp; Antoine Bordes Facebook AI Research 770 Broadway Ne">
@@ -390,7 +390,7 @@
       
         <h1 id="通过Wikipedia（维基百科）回答开放域问题"><a href="#通过Wikipedia（维基百科）回答开放域问题" class="headerlink" title="通过Wikipedia（维基百科）回答开放域问题"></a>通过Wikipedia（维基百科）回答开放域问题</h1><p>Danqi Chen∗Computer Science Stanford University Stanford, CA 94305, USA danqi@cs.stanford.edu Adam Fisch, Jason Weston &amp; Antoine Bordes Facebook AI Research 770 Broadway New York, NY 10003, USA {afisch,jase,abordes}@fb.com</p>
 <p><strong>摘要</strong></p>
-<p>该文章提出通过使用Wikipedia（维基百科）作为唯一知识源来处理开放域问题的回答（任何实际问题的答案都是基于Wikipedia的文本中的信息产生）。这种大规模机器阅读的任务结合了文档重构的挑战，  （找到相关的文章）和文本的机器理解（确定这些文章的答案）。  我们的方法将基于双重哈希和TF-IDF匹配的搜索组件与经过训练以检测维基百科段落中的答案的多层递归神经网络模型相结合。我们对多个现有QA数据集的实验表明（1）两个模块与现有的同行相比都具有很强的竞争力;（2）利用远程监督的多任务学习方式，是解决这一挑战性任务的有效体系。</p>
+<p>该文章提出通过使用Wikipedia（维基百科）作为唯一知识源来处理开放域问题的回答（任何实际问题的答案都是基于Wikipedia的文本中的信息产生）。这种大规模机器阅读的任务结合了文档重构的挑战，  （找到相关的文章）和文本的机器理解（确定这些文章的答案）。  我们的方法将基于双重哈希和TF-IDF匹配的搜索组件与经过训练以检测维基百科段落中的答案的多层递归神经网络模型相结合。我们对多个现有QA数据集的实验表明（1）两个模块与现有的同行相比都具有很强的竞争力;（2）利用远程监督的多任务学习方式，是解决这一挑战性任务的有效体系。<a id="more"></a></p>
 <p><strong>1、</strong> <strong>引言</strong></p>
 <p>这篇文章认为回答实际问题的方法在于在开放域中使用Wikipedia做为唯一知识源，类似于人们在百科全书中寻找问题的答案。Wikipedia是一个细节信息不断演进的百科全书如果能够恰当的使用该能力可以促进机器智能不断提升。不同于知识库（KBs）例如Freebase(Bollacker et al., 2008)或者DB-Pedia(Auer et al., 2007)尽管它们更容易被计算和处理，但在开放域问题的回答中却显得十分有限（Miller et al.2016），Wikipedia包涵有人们感兴趣的最新的知识。然而它被设计供人类阅读和使用而不是机器。</p>
 <p>将Wikipedia文章作为知识源使得QA任务的挑战不仅要处理大规模开放域问题还要使得机器可以理解文本。为了回答任意问题，首先要从超出500万个条目当中抽取极少数与问题相关的文档，然后仔细的阅读它们来生成回答。我们称这项工作为machine reading at scale（MRS）。我们将Wikipedia当做一个文本集并且不依赖它内部的知识图结构。结果表明我们的方法是通用的并且可以被切换到其他的文本集、书籍、甚至是日更新的新闻报纸中。</p>
