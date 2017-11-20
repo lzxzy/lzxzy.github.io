@@ -88,7 +88,7 @@
 <meta property="og:description" content="通过Wikipedia（维基百科）回答开放域问题Danqi Chen∗Computer Science Stanford University Stanford, CA 94305, USA danqi@cs.stanford.edu Adam Fisch, Jason Weston &amp;amp; Antoine Bordes Facebook AI Research 770 Broadway Ne">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://oz2l9lnu9.bkt.clouddn.com/DrQA.png">
-<meta property="og:updated_time" content="2017-11-19T16:12:31.000Z">
+<meta property="og:updated_time" content="2017-11-20T04:45:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="论文翻译_通过Wikipedia回答开放域问题">
 <meta name="twitter:description" content="通过Wikipedia（维基百科）回答开放域问题Danqi Chen∗Computer Science Stanford University Stanford, CA 94305, USA danqi@cs.stanford.edu Adam Fisch, Jason Weston &amp;amp; Antoine Bordes Facebook AI Research 770 Broadway Ne">
@@ -389,10 +389,8 @@
 
       
         <h1 id="通过Wikipedia（维基百科）回答开放域问题"><a href="#通过Wikipedia（维基百科）回答开放域问题" class="headerlink" title="通过Wikipedia（维基百科）回答开放域问题"></a>通过Wikipedia（维基百科）回答开放域问题</h1><p>Danqi Chen∗Computer Science Stanford University Stanford, CA 94305, USA danqi@cs.stanford.edu Adam Fisch, Jason Weston &amp; Antoine Bordes Facebook AI Research 770 Broadway New York, NY 10003, USA {afisch,jase,abordes}@fb.com</p>
-<p><strong>摘要</strong></p>
-<p>该文章提出通过使用Wikipedia（维基百科）作为唯一知识源来处理开放域问题的回答（任何实际问题的答案都是基于Wikipedia的文本中的信息产生）。这种大规模机器阅读的任务结合了文档重构的挑战，  （找到相关的文章）和文本的机器理解（确定这些文章的答案）。  我们的方法将基于双重哈希和TF-IDF匹配的搜索组件与经过训练以检测维基百科段落中的答案的多层递归神经网络模型相结合。我们对多个现有QA数据集的实验表明（1）两个模块与现有的同行相比都具有很强的竞争力;（2）利用远程监督的多任务学习方式，是解决这一挑战性任务的有效体系。<a id="more"></a></p>
-<p><strong>1、</strong> <strong>引言</strong></p>
-<p>这篇文章认为回答实际问题的方法在于在开放域中使用Wikipedia做为唯一知识源，类似于人们在百科全书中寻找问题的答案。Wikipedia是一个细节信息不断演进的百科全书如果能够恰当的使用该能力可以促进机器智能不断提升。不同于知识库（KBs）例如Freebase(Bollacker et al., 2008)或者DB-Pedia(Auer et al., 2007)尽管它们更容易被计算和处理，但在开放域问题的回答中却显得十分有限（Miller et al.2016），Wikipedia包涵有人们感兴趣的最新的知识。然而它被设计供人类阅读和使用而不是机器。</p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>该文章提出通过使用Wikipedia（维基百科）作为唯一知识源来处理开放域问题的回答（任何实际问题的答案都是基于Wikipedia的文本中的信息产生）。这种大规模机器阅读的任务结合了文档重构的挑战，  （找到相关的文章）和文本的机器理解（确定这些文章的答案）。  我们的方法将基于双重哈希和TF-IDF匹配的搜索组件与经过训练以检测维基百科段落中的答案的多层递归神经网络模型相结合。我们对多个现有QA数据集的实验表明（1）两个模块与现有的同行相比都具有很强的竞争力;（2）利用远程监督的多任务学习方式，是解决这一挑战性任务的有效体系。<a id="more"></a></p>
+<h2 id="1、引言"><a href="#1、引言" class="headerlink" title="1、引言"></a>1、引言</h2><p>这篇文章认为回答实际问题的方法在于在开放域中使用Wikipedia做为唯一知识源，类似于人们在百科全书中寻找问题的答案。Wikipedia是一个细节信息不断演进的百科全书如果能够恰当的使用该能力可以促进机器智能不断提升。不同于知识库（KBs）例如Freebase(Bollacker et al., 2008)或者DB-Pedia(Auer et al., 2007)尽管它们更容易被计算和处理，但在开放域问题的回答中却显得十分有限（Miller et al.2016），Wikipedia包涵有人们感兴趣的最新的知识。然而它被设计供人类阅读和使用而不是机器。</p>
 <p>将Wikipedia文章作为知识源使得QA任务的挑战不仅要处理大规模开放域问题还要使得机器可以理解文本。为了回答任意问题，首先要从超出500万个条目当中抽取极少数与问题相关的文档，然后仔细的阅读它们来生成回答。我们称这项工作为machine reading at scale（MRS）。我们将Wikipedia当做一个文本集并且不依赖它内部的知识图结构。结果表明我们的方法是通用的并且可以被切换到其他的文本集、书籍、甚至是日更新的新闻报纸中。</p>
 <p>大规模QA系统，像IBM的DeepQA (Ferrucci et al., 2010)依赖于多个知识源提供回答：除了Wikipedia还有KBs，字典甚至新闻文章、书籍等。结果是这种系统为了回答准确，极度依赖冗余的信息源。使用单一知识源强迫模型能够非常准确的寻找问题的答案，因为其对应的答案信息可能只出现一次。于机器理解子域和创建数据集例如SQuAD (Rajpurkar et al., 2016), CNN/Daily Mail (Hermann et al., 2015) 和CBT (Hill et al., 2016)，一个关键的动机在于研究机器的阅读能力。</p>
 <p>然而这些机器理解源通常假设一小段相关文本已经被识别并被嵌入模型当中。这对建立开放域QA系统来说是不实际的。与之形成鲜明对比的是，使用KB或者文件信息检索的方法必须将搜索作为解决方案的一个组成部分。相反，MRS侧重于同时保持机器理解的挑战，这需要深入理解文本，同时保持对大量开放资源搜索的现实限制。</p>
@@ -400,19 +398,15 @@
 <p>即要求开放域系统在这些数据集上都有良好的表现。我们开发了DrQA，一个用Wikipedia来回答问题的强大系统。主要的组成部分有：（1）文档检索器（Document Retriever），一个使用双重哈希和TF-IDF，用来匹配问题答案，可以有效返回相关文章子集的模块，还有（2）文本阅读器（Document Reader）一个多层递归神经网络机器理解模型被训练用来检测答案与这些返回的文本之间的跨度。图一给出了DrQA的示例。</p>
 <p><img src="http://oz2l9lnu9.bkt.clouddn.com/DrQA.png" alt="DrQA.png"></p>
 <p>  我们的实验表明我们的实验表明，文档检索器（Document Retriever）优于内置的维基百科搜索引擎，文档阅读器（Document Reader）在极具竞争力的SQuAD结果排名上达到了最先进水平。最后我们的完整系统使用多个衡量标准进行评估。特别的，通过使用多任务学习和远程监督学习我们在所有数据集上的性能相对于单任务训练均有所提高。</p>
-<p><strong>2、</strong> <strong>相关工作</strong></p>
-<p>以每年一度的TREC竞赛<a href="#_ftn1">[1]</a>为背景，开放域QA起初被定义为在非结构化的文本集中寻找答案。随着KBs的发展，从KBs中创造资源如 WebQuestions (Berant et al., 2013) 和</p>
+<h2 id="2、相关工作"><a href="#2、相关工作" class="headerlink" title="2、相关工作"></a>2、相关工作</h2><p>以每年一度的TREC竞赛<a href="#_ftn1">[1]</a>为背景，开放域QA起初被定义为在非结构化的文本集中寻找答案。随着KBs的发展，从KBs中创造资源如 WebQuestions (Berant et al., 2013) 和</p>
 <p>SimpleQuestions  (Bordes et al., 2015) based on the Freebase KB  (Bollacker et al., 2008) 或 on automatically extracted KBs, e.g.,OpenIE triples and NELL (Fader et al., 2014). 然而KBs有其固有的缺陷（不完整，模式固定）这使得研究人员回到了原始的基于行文本设置问题的答案。</p>
 <p>第二个促使人们从新的角度看待该问题在于机器文本理解例如，在阅读一小段故事后可以回答与之有关的问题。得益于近期的深度学习文章如：attention-based and memory-augmented neural networks (Bahdanau et al., 2015; Weston et al., 2015; Graves et al., 2014) 和新版本的训练和评估数据集如 QuizBowl (Iyyer et al., 2014), CNN/Daily Mail based on news articles (Hermann et al., 2015), CBT based on children books (Hill et al., 2016), 或基于Wikipedia的SQuAD (Rajpurkar et al., 2016) 和 WikiReading (Hewlett et al., 2016),这个子领域已经能够被实现。这篇文章的其中一个目标就是测试这些新方法在开放域QA中的表现如何。</p>
 <p>使用Wikipedia作为QA知识源在之前已经被提出Ryu et al. (2014) perform open-domain QA using a Wikipedia-based knowledge model.基于不同类型的半结构化知识例如infoboxes, article structure, category structure, 和definitions，他们通过对多个回答匹配模型生成文本内容。相似的Ahn et al. (2004) 也将Wikipedia与其他数据源作为文本来源, 在这种环境下检索其他文本。Buscaldi and Rosso (2006)也从Wikipedia中为QA挖掘知识和回答。不同于使用Wikipedia作为知识源寻找问题的答案，他们聚焦于QA系统返回的答案的正确性，并使用Wikipedia数据库生成一系列模板判断答案是否是所希望的。在我们所做的工作中，如同引言中描述的一样，我们仅仅考虑文本理解，为了专注于大量机器文本阅读的工作（MRs）使用Wikipedia作为唯一的知识源。</p>
 <p>通过使用web已经有大量高度开发的全管道QA方法，如QuASE (Sun et al., 2015)所做的，或者将Wikipedia作为数据源，如Microsoft’s AskMSR (Brill et al., 2002), IBM’s DeepQA (Ferrucci et al., 2010) 和YodaQA (Baudiˇ s, 2015; Baudiˇ s andˇSediv` y, 2015)做的一样，后者是开源的，因此可以重现以用于比较的目的。AskMSR是一个基于QA系统的搜索引擎并且依赖于“数据冗余而不是复杂的问题或候选答案的语言分析”，例如，它不在乎我们所做的机器理解。DeepQA是一个非常复杂的系统，并且依赖于文本包涵的非结构信息和像KBs一样的结构化数据，利用数据库或文章本体生成候选答案或者进行有效的投票。YodaQA是一个仿照DeepQA的开源系统，类似于组建网站，尤其在信息抽取，数据库和Wikipedia方面。我们的文本理解任务在使用单一知识源后面临更大的挑战。与这些方法进行比较为性能上限基准提供了一个有用的数据点。</p>
 <p>Multitask learning（多任务学习） (Caruana, 1998)和任务迁移在机器学习中有有丰富的历史，例如，using ImageNet in the computer vision community (Huh et al., 2016))同样在NLP中典型的有(Collobert and Weston, 2008)。这几个工作已经尝试组合多个QA训练数据集通过多任务学习来实现(i)任务迁移改善数据集性能(ii)提供一个单一通用的系统，由于不同数据集中数据分布的不同能够回答不同种类的问题。Fader et al. (2014) 使用 WebQuestions, TREC 和 WikiAnswers将四个 KBs做为知识源并且通过多任务学习在后两个数据集上得到提升。Bordes et al. (2015) 将 WebQuestions 和 SimpleQuestions 组合起来利用远程监督学习 使用 Freebase 作为 KB 在两个数据集上均有小量的提升, 尽管在报告中当使用一个数据集训练并用另一个数据集做测试时有较差的表现，这也表明了任务迁移的确是一个很有挑战性的课题，同样的(Kadlec et al., 2016)得出了相似的结论。我们沿着相似的主题，但不是使用KB而是以文档检索和文本阅读理解为背景，取得了积极的结果。</p>
-<p><strong>3、</strong> 我们的系统：<strong>DrQA</strong></p>
-<p><strong>4、</strong> <strong>数据</strong></p>
-<p><strong>5、</strong> <strong>实验</strong></p>
-<p><strong>6、</strong> <strong>结论</strong></p>
-<p><strong>参考</strong></p>
-<p>David Ahn, Valentin Jijkoun, Gilad Mishne, Karin Mller, Maarten de Rijke, and Stefan Schlobach. 2004. Using wikipedia at the trec qa track. In Pro- ceedings of TREC 2004.</p>
+<h2 id="3、-我们的系统：-DrQA"><a href="#3、-我们的系统：-DrQA" class="headerlink" title="3、 我们的系统： DrQA"></a>3、 我们的系统： DrQA</h2><p>接下来我们将我们的DrQA系统描述为由两部分组成的MRS：（1）为了找到相关文档的文档检索模块（2）一个机器理解模型，文档阅读器，为了从单个文档或一小部分文档集合中获得答案。</p>
+<h3 id="3-1、文档检索"><a href="#3-1、文档检索" class="headerlink" title="3.1、文档检索"></a>3.1、文档检索</h3><p>如同传统的QA系统，我们首先采用了高效（非机器学习）的文档检索系统缩小我们的搜索范围并且仅专注于阅读可能相关的文档。对于许多问题类型，相比于基于Wikipedia搜索API(GormleyandTong,2015)内建的ElasticSearch，一个简单的倒排索引查找，然后用术语向量模型评分，就可以很好地完成任务。将文章和问题比作TF-IDF模型中的词袋向量中的权重。我们进一步提高了我们的系统通过采取</p>
+<h2 id="4、数据"><a href="#4、数据" class="headerlink" title="4、数据"></a>4、数据</h2><h2 id="5、实验"><a href="#5、实验" class="headerlink" title="5、实验"></a>5、实验</h2><h2 id="6、结论"><a href="#6、结论" class="headerlink" title="6、结论"></a>6、结论</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>David Ahn, Valentin Jijkoun, Gilad Mishne, Karin Mller, Maarten de Rijke, and Stefan Schlobach. 2004. Using wikipedia at the trec qa track. In Pro- ceedings of TREC 2004.</p>
 <p>Sören Auer, Christian Bizer, Georgi Kobilarov, Jens Lehmann, Richard Cyganiak, and Zachary Ives.2007. Dbpedia: A nucleus for a web of open data.In The semantic web, Springer, pages 722–735.</p>
 <p>Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio. 2015.Neural machine translation by jointly learning toalign andtranslate. InInternational Conference on Learning Representations (ICLR).</p>
 <p>Petr Baudiˇ s. 2015. YodaQA: a modular question answering system pipeline. In POSTER 2015-19th In-ternational Student Conference on Electrical Engineering. pages 1156–1165.</p>
@@ -679,7 +673,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#通过Wikipedia（维基百科）回答开放域问题"><span class="nav-number">1.</span> <span class="nav-text">通过Wikipedia（维基百科）回答开放域问题</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#通过Wikipedia（维基百科）回答开放域问题"><span class="nav-number">1.</span> <span class="nav-text">通过Wikipedia（维基百科）回答开放域问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#摘要"><span class="nav-number">1.1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1、引言"><span class="nav-number">1.2.</span> <span class="nav-text">1、引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、相关工作"><span class="nav-number">1.3.</span> <span class="nav-text">2、相关工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、-我们的系统：-DrQA"><span class="nav-number">1.4.</span> <span class="nav-text">3、 我们的系统： DrQA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1、文档检索"><span class="nav-number">1.4.1.</span> <span class="nav-text">3.1、文档检索</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、数据"><span class="nav-number">1.5.</span> <span class="nav-text">4、数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、实验"><span class="nav-number">1.6.</span> <span class="nav-text">5、实验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6、结论"><span class="nav-number">1.7.</span> <span class="nav-text">6、结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">1.8.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
             
 
           </div>
