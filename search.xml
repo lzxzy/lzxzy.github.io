@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[Linux下zsh配置]]></title>
     <url>%2F2017%2F11%2F30%2FLinux%E4%B8%8Bzsh%E9%85%8D%E7%BD%AE%2F</url>
-    <content type="text"><![CDATA[Linux下zsh配置zsh 是Linux下执行终端时bash的一个替代品，我使用它的主要原因是—颜值高普通终端 安装1234#install zshuser@computer:~$ sudo apt-get install zsh#instead bashuser@computer:~$ chsh -s /bin/zsh 配置安装oh-my-zsh1user@computer:~$ curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh 创建一个新的zsh配置文件1user@computer:~$ cp .oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc 进行配置1user@computer:~$ vim ~/.zshrc 这里只介绍主题的修改，更多的主题可以在下面的网址中进行挑选https://github.com/robbyrussell/oh-my-zsh/wiki/themes配置好后关闭terminal重新打开，是不是感觉炫酷了很多]]></content>
+    <content type="text"><![CDATA[Linux下zsh配置zsh 是Linux下执行终端时bash的一个替代品，我使用它的主要原因是—颜值高 安装1234#install zshuser@computer:~$ sudo apt-get install zsh#instead bashuser@computer:~$ chsh -s /bin/zsh 配置安装oh-my-zsh1user@computer:~$ curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh 创建一个新的zsh配置文件1user@computer:~$ cp .oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc 进行配置1user@computer:~$ vim ~/.zshrc 这里只介绍主题的修改，更多的主题可以在下面的网址中进行挑选https://github.com/robbyrussell/oh-my-zsh/wiki/themes配置好后关闭terminal重新打开，是不是感觉炫酷了很多]]></content>
       <categories>
         <category>Linux</category>
       </categories>

@@ -4,8 +4,32 @@
 
     
   <url>
+    <loc>http://yoursite.com/2017/11/30/Linux%E4%B8%8Bzsh%E9%85%8D%E7%BD%AE/</loc>
+    <lastmod>2017-11-29T17:42:34.000Z</lastmod>
+    <data>
+        <display>
+        <title>Linux下zsh配置</title>
+        <pubTime>2017-11-29T16:31:34.000Z</pubTime>
+        
+        <tag>Linux</tag>
+         
+        <tag>OS</tag>
+         
+        <tag>terminal</tag>
+         
+         
+           
+             
+              <breadCrumb title="Linux" url="http://yoursite.com/categories/Linux/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://yoursite.com/2017/11/29/DL&ML%E5%B7%A5%E7%A8%8B%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</loc>
-    <lastmod>2017-11-29T17:15:58.000Z</lastmod>
+    <lastmod>2017-11-29T17:42:32.000Z</lastmod>
     <data>
         <display>
         <title>DL&ML工程实验环境搭建</title>
@@ -23,30 +47,6 @@
            
              
               <breadCrumb title="Linux,DeepLearning" url="http://yoursite.com/categories/Linux-DeepLearning/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://yoursite.com/2017/11/30/Linux%E4%B8%8Bzsh%E9%85%8D%E7%BD%AE/</loc>
-    <lastmod>2017-11-29T17:05:12.000Z</lastmod>
-    <data>
-        <display>
-        <title>Linux下zsh配置</title>
-        <pubTime>2017-11-29T16:31:34.000Z</pubTime>
-        
-        <tag>Linux</tag>
-         
-        <tag>OS</tag>
-         
-        <tag>terminal</tag>
-         
-         
-           
-             
-              <breadCrumb title="Linux" url="http://yoursite.com/categories/Linux/"/>
           
         </display>
     </data>
